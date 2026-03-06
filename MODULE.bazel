@@ -65,4 +65,3 @@ multitool = use_extension(
 )
 multitool.hub(lockfile = "//:multitool.lock.json")
 use_repo(multitool, "multitool")
-

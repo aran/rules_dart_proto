@@ -9,8 +9,8 @@ proto_library(
 
 dart_proto_library(
     name = "greeter_dart_proto",
-    deps = [":greeter_proto"],
     grpc = True,
+    deps = [":greeter_proto"],
 )
 
 # Server binary — starts a gRPC server with the Greeter service.

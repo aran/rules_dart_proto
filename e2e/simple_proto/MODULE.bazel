@@ -12,9 +12,10 @@ local_path_override(
     path = "../..",
 )
 
-local_path_override(
+git_override(
     module_name = "rules_dart",
-    path = "../../../rules_dart",
+    remote = "https://github.com/aran/rules_dart.git",
+    tag = "v0.1.2",
 )
 
 dart = use_extension("@rules_dart//dart:extensions.bzl", "dart")
