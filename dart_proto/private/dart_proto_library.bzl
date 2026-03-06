@@ -70,12 +70,9 @@ def _dart_proto_library_impl(ctx):
     if ctx.attr.grpc:
         runtime_deps.append(ctx.attr._grpc_runtime[DartInfo])
 
-    # lib_root: the path to the package root (parent of lib/).
-    # For generated files in bazel-out, we use the full exec-root-relative path
-    # so the package_config.json rootUri resolves correctly.
-    # lib_dir.path is "bazel-out/<config>/bin/<pkg>/<name>/lib"
-    # We need "bazel-out/<config>/bin/<pkg>/<name>" (strip trailing /lib).
-    lib_root = lib_dir.path.rsplit("/", 1)[0]
+    # lib_root: short_path to the package root (parent of lib/).
+    # e.g. lib_dir.short_path is "<name>/lib", lib_root is "<name>".
+    lib_root = lib_dir.short_path.rsplit("/", 1)[0]
 
     this_pkg = DartPackageInfo(
         package_name = package_name,
