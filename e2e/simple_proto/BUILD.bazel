@@ -1,0 +1,19 @@
+load("@rules_dart//dart:defs.bzl", "dart_binary")
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "person_proto",
+    srcs = ["person.proto"],
+)
+
+dart_proto_library(
+    name = "person_dart_proto",
+    deps = [":person_proto"],
+)
+
+dart_binary(
+    name = "app",
+    main = "main.dart",
+    deps = [":person_dart_proto"],
+)
