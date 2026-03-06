@@ -3,17 +3,40 @@ load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
 proto_library(
-    name = "person_proto",
-    srcs = ["person.proto"],
+    name = "address_proto",
+    srcs = ["address.proto"],
 )
 
+proto_library(
+    name = "person_proto",
+    srcs = ["person.proto"],
+    deps = [":address_proto"],
+)
+
+# Generates Dart code for person.proto and its transitive proto deps (address.proto).
 dart_proto_library(
     name = "person_dart_proto",
     deps = [":person_proto"],
 )
 
+# Tests that proto messages with cross-proto imports can be used from Dart.
 dart_binary(
     name = "app",
     main = "main.dart",
     deps = [":person_dart_proto"],
+)
+
+# Also tests multi-dep: a single dart_proto_library with multiple proto_library deps.
+dart_proto_library(
+    name = "all_protos",
+    deps = [
+        ":address_proto",
+        ":person_proto",
+    ],
+)
+
+dart_binary(
+    name = "multi_dep_app",
+    main = "multi_dep_main.dart",
+    deps = [":all_protos"],
 )

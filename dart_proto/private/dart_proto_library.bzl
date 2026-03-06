@@ -11,33 +11,42 @@ def _dart_proto_library_impl(ctx):
     # package:<rule_name>/... imports through the standard packageUri: "lib/".
     lib_dir = ctx.actions.declare_directory(ctx.label.name + "/lib")
 
+    # Collect all sources across all deps into a single protoc invocation.
+    # Bazel requires exactly one action per declared output directory.
+    #
+    # We generate code for ALL transitive proto sources (not just direct ones)
+    # because protoc-gen-dart generates imports between .pb.dart files — if
+    # person.proto imports address.proto, person.pb.dart references Address
+    # from address.pb.dart, so both must be generated together.
+    all_srcs = {}  # File -> True, used as ordered set for dedup
+    import_paths = {}
+    transitive_src_depsets = []
     for proto_info in proto_infos:
-        if not proto_info.direct_sources:
-            continue
+        for src in proto_info.transitive_sources.to_list():
+            all_srcs[src] = True
+        for path in proto_info.transitive_proto_path.to_list():
+            if path:
+                import_paths[path] = True
+        transitive_src_depsets.append(proto_info.transitive_sources)
 
-        # Build protoc arguments
+    if all_srcs:
         args = ctx.actions.args()
 
-        # Plugin path
         plugin = ctx.executable._plugin
         args.add("--plugin=protoc-gen-dart=%s" % plugin.path)
 
-        # Output directory — protoc writes .pb.dart files here
         if ctx.attr.grpc:
             args.add("--dart_out=grpc:%s" % lib_dir.path)
         else:
             args.add("--dart_out=%s" % lib_dir.path)
 
-        # Import paths from transitive proto sources
-        for path in proto_info.transitive_proto_path.to_list():
-            if path:
-                args.add("-I%s" % path)
+        for path in import_paths:
+            args.add("-I%s" % path)
 
         # Always include the exec root for well-known protos
         args.add("-I.")
 
-        # Proto source files
-        for src in proto_info.direct_sources:
+        for src in all_srcs:
             args.add(src.path)
 
         ctx.actions.run(
@@ -45,7 +54,7 @@ def _dart_proto_library_impl(ctx):
             executable = ctx.executable._protoc,
             arguments = [args],
             inputs = depset(
-                transitive = [proto_info.transitive_sources],
+                transitive = transitive_src_depsets,
             ),
             tools = [plugin],
             outputs = [lib_dir],
