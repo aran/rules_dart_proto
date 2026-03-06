@@ -10,3 +10,15 @@ bcr_test_module:
       bazel: ${{ bazel }}
       test_targets:
         - "//..."
+bcr_test_module_grpc:
+  module_path: "e2e/grpc_proto"
+  matrix:
+    platform: ["debian11", "macos", "ubuntu2204"]
+    bazel: ["9.x"]
+  tasks:
+    run_tests:
+      name: "Run gRPC test module"
+      platform: ${{ platform }}
+      bazel: ${{ bazel }}
+      test_targets:
+        - "//..."

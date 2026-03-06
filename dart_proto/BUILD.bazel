@@ -15,12 +15,6 @@ bzl_library(
     deps = ["//dart_proto/private:dart_proto_library"],
 )
 
-bzl_library(
-    name = "extensions",
-    srcs = ["extensions.bzl"],
-    visibility = ["//visibility:public"],
-)
-
 exports_files([
     "pubspec.lock",
     "pubspec.yaml",

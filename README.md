@@ -4,6 +4,8 @@ Bazel rules for generating Dart code from Protocol Buffer definitions.
 
 Bridges [`rules_dart`](https://github.com/aran/rules_dart), [`rules_proto`](https://github.com/bazelbuild/rules_proto), and the Dart [`protoc_plugin`](https://pub.dev/packages/protoc_plugin) package.
 
+Requires Bazel 9+.
+
 ## Setup
 
 Add to your `MODULE.bazel`:
@@ -12,7 +14,7 @@ Add to your `MODULE.bazel`:
 bazel_dep(name = "rules_dart", version = "...")
 bazel_dep(name = "rules_dart_proto", version = "...")
 bazel_dep(name = "rules_proto", version = "7.1.0")
-bazel_dep(name = "protobuf", version = "29.0")
+bazel_dep(name = "protobuf", version = "33.4")
 
 dart = use_extension("@rules_dart//dart:extensions.bzl", "dart")
 dart.toolchain(dart_version = "3.11.1")
@@ -44,9 +46,37 @@ dart_binary(
 )
 ```
 
+Generated code is imported via `package:<dart_proto_library name>/<proto_name>.pb.dart`:
+
+```dart
+import 'package:person_dart_proto/person.pb.dart';
+```
+
+### Interdependent protos
+
+When a proto imports another proto, `dart_proto_library` automatically generates code for all transitive proto sources:
+
+```starlark
+proto_library(
+    name = "address_proto",
+    srcs = ["address.proto"],
+)
+
+proto_library(
+    name = "person_proto",
+    srcs = ["person.proto"],
+    deps = [":address_proto"],
+)
+
+dart_proto_library(
+    name = "person_dart_proto",
+    deps = [":person_proto"],
+)
+```
+
 ### gRPC
 
-Set `grpc = True` to also generate `.pbgrpc.dart` files:
+Set `grpc = True` to also generate `.pbgrpc.dart` files. The `grpc` runtime library is automatically included in transitive dependencies:
 
 ```starlark
 dart_proto_library(
@@ -62,4 +92,6 @@ dart_proto_library(
 2. `dart_proto_library` runs `protoc` with the `protoc-gen-dart` plugin to generate `.pb.dart`, `.pbenum.dart`, `.pbjson.dart` (and optionally `.pbgrpc.dart`) files
 3. The generated code is returned as `DartInfo`, so it composes seamlessly with `dart_binary`, `dart_library`, and `dart_test`
 
-The `protoc-gen-dart` plugin is compiled from source using `rules_dart`, so no system Dart or PATH configuration is needed. The `protobuf` runtime library is included automatically in transitive dependencies.
+The `protoc-gen-dart` plugin is compiled from source using `rules_dart`, so no system Dart or PATH configuration is needed. The `protobuf` runtime library (and `grpc` when `grpc = True`) is included automatically in transitive dependencies.
+
+See `e2e/simple_proto/` and `e2e/grpc_proto/` for complete working examples.
