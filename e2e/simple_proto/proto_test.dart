@@ -1,4 +1,6 @@
 import 'package:address_dart_proto/address.pb.dart';
+import 'package:models_dart_proto/product.pb.dart';
+import 'package:models_dart_proto/user.pb.dart';
 import 'package:person_dart_proto/person.pb.dart';
 
 void main() {
@@ -33,6 +35,21 @@ void main() {
   assert(empty.name == '', 'default name should be empty');
   assert(empty.age == 0, 'default age should be 0');
   assert(!empty.hasHomeAddress(), 'should not have address by default');
+
+  // Multi-src proto_library: User and Product in the same proto_library
+  final seller = User()
+    ..username = 'bob'
+    ..address = addr;
+  final product = Product()
+    ..name = 'Widget'
+    ..price = 999
+    ..seller = seller;
+  final productBytes = product.writeToBuffer();
+  final product2 = Product.fromBuffer(productBytes);
+  assert(product2.name == 'Widget', 'product name mismatch');
+  assert(product2.price == 999, 'product price mismatch');
+  assert(product2.seller.username == 'bob', 'seller username mismatch');
+  assert(product2.seller.address.city == 'Springfield', 'seller address mismatch');
 
   print('All proto tests passed!');
 }

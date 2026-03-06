@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package example;
+
+import "address/address.proto";
+
+message User {
+  string username = 1;
+  Address address = 2;
+}

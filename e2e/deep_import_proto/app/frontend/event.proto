@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package app.frontend;
+
+import "lib/shared/types/common.proto";
+import "services/api/v2/request.proto";
+
+message Event {
+  string name = 1;
+  shared.types.Metadata metadata = 2;
+  services.api.v2.Request originating_request = 3;
+}

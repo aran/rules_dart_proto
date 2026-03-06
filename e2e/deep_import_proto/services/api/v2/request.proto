@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package services.api.v2;
+
+import "lib/shared/types/common.proto";
+
+message Request {
+  string id = 1;
+  string endpoint = 2;
+  shared.types.Metadata metadata = 3;
+}
+
+message Response {
+  string id = 1;
+  int32 status_code = 2;
+  shared.types.Metadata metadata = 3;
+}

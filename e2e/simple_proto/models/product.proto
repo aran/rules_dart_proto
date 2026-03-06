@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package example;
+
+import "models/user.proto";
+
+message Product {
+  string name = 1;
+  int32 price = 2;
+  User seller = 3;
+}

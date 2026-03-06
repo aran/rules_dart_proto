@@ -1,0 +1,11 @@
+load("@rules_dart//dart:defs.bzl", "dart_test")
+
+dart_test(
+    name = "deep_import_test",
+    main = "deep_import_test.dart",
+    deps = [
+        "//app/frontend:frontend_dart_proto",
+        "//lib/shared/types:types_dart_proto",
+        "//services/api/v2:api_v2_dart_proto",
+    ],
+)

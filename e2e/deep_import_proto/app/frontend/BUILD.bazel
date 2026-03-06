@@ -1,0 +1,22 @@
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "frontend_proto",
+    srcs = ["event.proto"],
+    deps = [
+        "//lib/shared/types:types_proto",
+        "//services/api/v2:api_v2_proto",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+dart_proto_library(
+    name = "frontend_dart_proto",
+    dart_deps = [
+        "//lib/shared/types:types_dart_proto",
+        "//services/api/v2:api_v2_dart_proto",
+    ],
+    deps = [":frontend_proto"],
+    visibility = ["//visibility:public"],
+)
