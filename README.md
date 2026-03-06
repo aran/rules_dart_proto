@@ -14,7 +14,7 @@ Add to your `MODULE.bazel`:
 bazel_dep(name = "rules_dart", version = "...")
 bazel_dep(name = "rules_dart_proto", version = "...")
 bazel_dep(name = "rules_proto", version = "7.1.0")
-bazel_dep(name = "protobuf", version = "33.4")
+bazel_dep(name = "protobuf", version = "34.0.bcr.1")
 
 dart = use_extension("@rules_dart//dart:extensions.bzl", "dart")
 dart.toolchain(dart_version = "3.11.1")

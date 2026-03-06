@@ -5,7 +5,7 @@ module(name = "grpc_proto_e2e")
 bazel_dep(name = "rules_dart", version = "0.0.0")
 bazel_dep(name = "rules_dart_proto", version = "0.0.0")
 bazel_dep(name = "rules_proto", version = "7.1.0")
-bazel_dep(name = "protobuf", version = "33.4")
+bazel_dep(name = "protobuf", version = "34.0.bcr.1")
 
 local_path_override(
     module_name = "rules_dart_proto",
