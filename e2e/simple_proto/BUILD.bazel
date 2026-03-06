@@ -1,4 +1,4 @@
-load("@rules_dart//dart:defs.bzl", "dart_binary")
+load("@rules_dart//dart:defs.bzl", "dart_binary", "dart_test")
 load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -52,4 +52,10 @@ dart_binary(
     name = "custom_pkg_app",
     main = "custom_pkg_main.dart",
     deps = [":address_protos_gen"],
+)
+
+dart_test(
+    name = "proto_test",
+    main = "proto_test.dart",
+    deps = [":person_dart_proto"],
 )

@@ -3,65 +3,67 @@
 load("@protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
 load("@rules_dart//dart:providers.bzl", "DartInfo", "DartPackageInfo")
 
+def _file_path(file):
+    return file.path
+
 def _dart_proto_library_impl(ctx):
     proto_infos = [dep[ProtoInfo] for dep in ctx.attr.deps]
 
     package_name = ctx.attr.package_name or ctx.label.name
+    for c in package_name.elems():
+        if not (c.isalnum() or c == "_"):
+            fail("package_name %r contains invalid character %r; must be alphanumeric or underscore" % (package_name, c))
 
     # Declare a tree artifact: <package_name>/lib/
     # Generated .pb.dart files go inside, making them accessible via
     # package:<package_name>/... imports through the standard packageUri: "lib/".
     lib_dir = ctx.actions.declare_directory(package_name + "/lib")
 
-    # Collect all sources across all deps into a single protoc invocation.
-    # Bazel requires exactly one action per declared output directory.
-    #
+    # Collect all transitive sources and import paths across all deps.
     # We generate code for ALL transitive proto sources (not just direct ones)
     # because protoc-gen-dart generates imports between .pb.dart files — if
     # person.proto imports address.proto, person.pb.dart references Address
     # from address.pb.dart, so both must be generated together.
-    all_srcs = {}  # File -> True, used as ordered set for dedup
+    #
+    # Import paths are collected eagerly (small set of strings), but sources
+    # stay as depsets to avoid flattening during analysis.
     import_paths = {}
     transitive_src_depsets = []
     for proto_info in proto_infos:
-        for src in proto_info.transitive_sources.to_list():
-            all_srcs[src] = True
         for path in proto_info.transitive_proto_path.to_list():
             if path:
                 import_paths[path] = True
         transitive_src_depsets.append(proto_info.transitive_sources)
 
-    if all_srcs:
-        args = ctx.actions.args()
+    all_srcs = depset(transitive = transitive_src_depsets)
 
-        plugin = ctx.executable._plugin
-        args.add("--plugin=protoc-gen-dart=%s" % plugin.path)
+    args = ctx.actions.args()
 
-        if ctx.attr.grpc:
-            args.add("--dart_out=grpc:%s" % lib_dir.path)
-        else:
-            args.add("--dart_out=%s" % lib_dir.path)
+    plugin = ctx.executable._plugin
+    args.add("--plugin=protoc-gen-dart=%s" % plugin.path)
 
-        for path in import_paths:
-            args.add("-I%s" % path)
+    if ctx.attr.grpc:
+        args.add("--dart_out=grpc:%s" % lib_dir.path)
+    else:
+        args.add("--dart_out=%s" % lib_dir.path)
 
-        # Always include the exec root for well-known protos
-        args.add("-I.")
+    for path in sorted(import_paths.keys()):
+        args.add("-I" + path)
 
-        for src in all_srcs:
-            args.add(src.path)
+    # Always include the exec root for well-known protos
+    args.add("-I.")
 
-        ctx.actions.run(
-            mnemonic = "DartProtoGen",
-            executable = ctx.executable._protoc,
-            arguments = [args],
-            inputs = depset(
-                transitive = transitive_src_depsets,
-            ),
-            tools = [plugin],
-            outputs = [lib_dir],
-            progress_message = "Generating Dart protobuf code for %{label}",
-        )
+    args.add_all(all_srcs, map_each = _file_path)
+
+    ctx.actions.run(
+        mnemonic = "DartProtoGen",
+        executable = ctx.executable._protoc,
+        arguments = [args],
+        inputs = all_srcs,
+        tools = [plugin],
+        outputs = [lib_dir],
+        progress_message = "Generating Dart protobuf code for %{label}",
+    )
 
     # Collect DartInfo from runtime libraries.
     runtime_deps = [ctx.attr._protobuf_runtime[DartInfo]]
