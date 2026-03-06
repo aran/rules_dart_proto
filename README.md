@@ -54,12 +54,17 @@ import 'package:person_dart_proto/person.pb.dart';
 
 ### Interdependent protos
 
-When a proto imports another proto, `dart_proto_library` automatically generates code for all transitive proto sources:
+Each `proto_library` needs its own `dart_proto_library`. Use `dart_deps` to wire the Dart-level dependencies between them:
 
 ```starlark
 proto_library(
     name = "address_proto",
     srcs = ["address.proto"],
+)
+
+dart_proto_library(
+    name = "address_dart_proto",
+    deps = [":address_proto"],
 )
 
 proto_library(
@@ -71,6 +76,7 @@ proto_library(
 dart_proto_library(
     name = "person_dart_proto",
     deps = [":person_proto"],
+    dart_deps = [":address_dart_proto"],
 )
 ```
 
@@ -108,4 +114,4 @@ Generated code is then imported as `package:my_app/person.pb.dart` instead of `p
 
 The `protoc-gen-dart` plugin is compiled from source using `rules_dart`, so no system Dart or PATH configuration is needed. The `protobuf` runtime library (and `grpc` when `grpc = True`) is included automatically in transitive dependencies.
 
-See `e2e/simple_proto/` and `e2e/grpc_proto/` for complete working examples.
+See `e2e/simple_proto/`, `e2e/grpc_proto/`, `e2e/diamond_proto/`, and `e2e/deep_import_proto/` for complete working examples.
