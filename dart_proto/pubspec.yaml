@@ -1,0 +1,6 @@
+name: dart_proto_deps
+environment:
+  sdk: ^3.4.0
+dependencies:
+  protoc_plugin: ^25.0.0
+  protobuf: ^6.0.0
