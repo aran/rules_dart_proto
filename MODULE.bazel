@@ -31,6 +31,11 @@ module(
 )
 
 bazel_dep(name = "rules_dart", version = "0.0.0")
+git_override(
+    module_name = "rules_dart",
+    remote = "https://github.com/aran/rules_dart.git",
+    tag = "v0.1.2",
+)
 bazel_dep(name = "rules_proto", version = "7.1.0")
 bazel_dep(name = "protobuf", version = "34.0.bcr.1")
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
@@ -61,9 +66,3 @@ multitool = use_extension(
 multitool.hub(lockfile = "//:multitool.lock.json")
 use_repo(multitool, "multitool")
 
-# Development overrides — these are ignored when rules_dart_proto is used
-# as a dependency of another module.
-local_path_override(
-    module_name = "rules_dart",
-    path = "../rules_dart",
-)
