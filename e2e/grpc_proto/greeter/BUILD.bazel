@@ -1,0 +1,15 @@
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "greeter_proto",
+    srcs = ["greeter.proto"],
+    visibility = ["//visibility:public"],
+)
+
+dart_proto_library(
+    name = "greeter_dart_proto",
+    grpc = True,
+    deps = [":greeter_proto"],
+    visibility = ["//visibility:public"],
+)

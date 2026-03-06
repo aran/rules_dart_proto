@@ -1,0 +1,15 @@
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "person_proto",
+    srcs = ["person.proto"],
+    deps = ["//common:common_proto"],
+)
+
+dart_proto_library(
+    name = "person_dart_proto",
+    dart_deps = ["//common:common_dart_proto"],
+    deps = [":person_proto"],
+    visibility = ["//visibility:public"],
+)

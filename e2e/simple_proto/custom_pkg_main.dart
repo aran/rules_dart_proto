@@ -1,4 +1,4 @@
-import 'package:my_address_protos/address.pb.dart';
+import 'package:address_dart_proto/address.pb.dart';
 
 void main() {
   final addr = Address()

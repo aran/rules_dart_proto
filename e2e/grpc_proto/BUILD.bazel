@@ -1,28 +1,15 @@
 load("@rules_dart//dart:defs.bzl", "dart_binary")
-load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
-load("@rules_proto//proto:defs.bzl", "proto_library")
-
-proto_library(
-    name = "greeter_proto",
-    srcs = ["greeter.proto"],
-)
-
-dart_proto_library(
-    name = "greeter_dart_proto",
-    grpc = True,
-    deps = [":greeter_proto"],
-)
 
 # Server binary — starts a gRPC server with the Greeter service.
 dart_binary(
     name = "server",
     main = "server.dart",
-    deps = [":greeter_dart_proto"],
+    deps = ["//greeter:greeter_dart_proto"],
 )
 
 # Client binary — connects to the gRPC server and calls Greet.
 dart_binary(
     name = "client",
     main = "client.dart",
-    deps = [":greeter_dart_proto"],
+    deps = ["//greeter:greeter_dart_proto"],
 )

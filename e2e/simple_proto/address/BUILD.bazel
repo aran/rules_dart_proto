@@ -1,0 +1,14 @@
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "address_proto",
+    srcs = ["address.proto"],
+    visibility = ["//visibility:public"],
+)
+
+dart_proto_library(
+    name = "address_dart_proto",
+    deps = [":address_proto"],
+    visibility = ["//visibility:public"],
+)

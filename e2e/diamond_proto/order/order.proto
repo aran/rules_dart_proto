@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package order;
+
+import "common/common.proto";
+
+message Order {
+  string id = 1;
+  common.Common common = 2;
+}

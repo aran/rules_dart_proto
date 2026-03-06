@@ -31,7 +31,8 @@ jobs:
         [
           ".",
           "e2e/simple_proto",
-          "e2e/grpc_proto"
+          "e2e/grpc_proto",
+          "e2e/diamond_proto"
         ]
   pre-commit:
     runs-on: ubuntu-latest

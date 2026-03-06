@@ -8,6 +8,13 @@ dart_binary(
     deps = ["@dart_proto_deps//:protoc_plugin"],
 )
 
+dart_binary(
+    name = "protoc_gen_dart_bazel",
+    main = "protoc_gen_dart_bazel_main.dart",
+    visibility = ["//visibility:public"],
+    deps = ["@dart_proto_deps//:protoc_plugin"],
+)
+
 bzl_library(
     name = "defs",
     srcs = ["defs.bzl"],

@@ -1,5 +1,5 @@
 import 'package:person_dart_proto/person.pb.dart';
-import 'package:person_dart_proto/address.pb.dart';
+import 'package:address_dart_proto/address.pb.dart';
 
 void main() {
   final address = Address()

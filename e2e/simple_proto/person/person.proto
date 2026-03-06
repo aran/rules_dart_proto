@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package example;
 
-import "address.proto";
+import "address/address.proto";
 
 message Person {
   string name = 1;
