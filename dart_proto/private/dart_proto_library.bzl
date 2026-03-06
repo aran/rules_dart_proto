@@ -61,8 +61,10 @@ def _dart_proto_library_impl(ctx):
             progress_message = "Generating Dart protobuf code for %{label}",
         )
 
-    # Collect DartInfo from the protobuf runtime
-    runtime_info = ctx.attr._protobuf_runtime[DartInfo]
+    # Collect DartInfo from runtime libraries.
+    runtime_deps = [ctx.attr._protobuf_runtime[DartInfo]]
+    if ctx.attr.grpc:
+        runtime_deps.append(ctx.attr._grpc_runtime[DartInfo])
 
     # lib_root: the path to the package root (parent of lib/).
     # For generated files in bazel-out, we use the full exec-root-relative path
@@ -80,12 +82,12 @@ def _dart_proto_library_impl(ctx):
 
     transitive_srcs = depset(
         direct = [lib_dir],
-        transitive = [runtime_info.transitive_srcs],
+        transitive = [dep.transitive_srcs for dep in runtime_deps],
     )
 
     transitive_packages = depset(
         direct = [this_pkg],
-        transitive = [runtime_info.transitive_packages],
+        transitive = [dep.transitive_packages for dep in runtime_deps],
     )
 
     return [
@@ -128,6 +130,11 @@ dart_proto_library = rule(
         "_protobuf_runtime": attr.label(
             doc = "The Dart protobuf runtime library.",
             default = "@dart_proto_deps//:protobuf",
+            providers = [DartInfo],
+        ),
+        "_grpc_runtime": attr.label(
+            doc = "The Dart gRPC runtime library (used when grpc = True).",
+            default = "@dart_proto_deps//:grpc",
             providers = [DartInfo],
         ),
     },
