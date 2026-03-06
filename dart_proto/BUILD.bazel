@@ -4,8 +4,8 @@ load("@rules_dart//dart:defs.bzl", "dart_binary")
 dart_binary(
     name = "protoc_gen_dart",
     main = "protoc_gen_dart_main.dart",
-    deps = ["@dart_proto_deps//:protoc_plugin"],
     visibility = ["//visibility:public"],
+    deps = ["@dart_proto_deps//:protoc_plugin"],
 )
 
 bzl_library(

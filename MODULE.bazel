@@ -36,6 +36,7 @@ git_override(
     remote = "https://github.com/aran/rules_dart.git",
     tag = "v0.1.2",
 )
+
 bazel_dep(name = "rules_proto", version = "7.1.0")
 bazel_dep(name = "protobuf", version = "34.0.bcr.1")
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
@@ -55,7 +56,10 @@ register_toolchains("@dart_toolchains//:all")
 
 # Fetch protoc_plugin and all transitive dependencies from pub.dev
 pub = use_extension("@rules_dart//dart/pub:extensions.bzl", "pub")
-pub.from_lock(name = "dart_proto_deps", lock = "//dart_proto:pubspec.lock")
+pub.from_lock(
+    name = "dart_proto_deps",
+    lock = "//dart_proto:pubspec.lock",
+)
 use_repo(pub, "dart_proto_deps")
 
 multitool = use_extension(
