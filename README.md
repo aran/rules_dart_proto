@@ -86,6 +86,20 @@ dart_proto_library(
 )
 ```
 
+### Custom package name (dual build)
+
+By default, the Dart package name matches the rule name. Use `package_name` to override it — useful when you also generate proto code with `build_runner` and need both build systems to use the same package name:
+
+```starlark
+dart_proto_library(
+    name = "person_protos_gen",
+    package_name = "my_app",
+    deps = [":person_proto"],
+)
+```
+
+Generated code is then imported as `package:my_app/person.pb.dart` instead of `package:person_protos_gen/person.pb.dart`.
+
 ## How it works
 
 1. `proto_library` defines your `.proto` sources (from `rules_proto`)

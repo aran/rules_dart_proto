@@ -6,10 +6,12 @@ load("@rules_dart//dart:providers.bzl", "DartInfo", "DartPackageInfo")
 def _dart_proto_library_impl(ctx):
     proto_infos = [dep[ProtoInfo] for dep in ctx.attr.deps]
 
-    # Declare a tree artifact: <rule_name>/lib/
+    package_name = ctx.attr.package_name or ctx.label.name
+
+    # Declare a tree artifact: <package_name>/lib/
     # Generated .pb.dart files go inside, making them accessible via
-    # package:<rule_name>/... imports through the standard packageUri: "lib/".
-    lib_dir = ctx.actions.declare_directory(ctx.label.name + "/lib")
+    # package:<package_name>/... imports through the standard packageUri: "lib/".
+    lib_dir = ctx.actions.declare_directory(package_name + "/lib")
 
     # Collect all sources across all deps into a single protoc invocation.
     # Bazel requires exactly one action per declared output directory.
@@ -73,8 +75,6 @@ def _dart_proto_library_impl(ctx):
     # We need "bazel-out/<config>/bin/<pkg>/<name>" (strip trailing /lib).
     lib_root = lib_dir.path.rsplit("/", 1)[0]
 
-    package_name = ctx.label.name
-
     this_pkg = DartPackageInfo(
         package_name = package_name,
         lib_root = lib_root,
@@ -110,6 +110,9 @@ dart_proto_library = rule(
             doc = "proto_library targets to generate Dart code for.",
             mandatory = True,
             providers = [ProtoInfo],
+        ),
+        "package_name": attr.string(
+            doc = "Dart package name for the generated code. Defaults to the rule name.",
         ),
         "grpc": attr.bool(
             doc = "If True, also generate .pbgrpc.dart files for gRPC services.",

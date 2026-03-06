@@ -40,3 +40,16 @@ dart_binary(
     main = "multi_dep_main.dart",
     deps = [":all_protos"],
 )
+
+# Tests that package_name overrides the Dart package name for generated code.
+dart_proto_library(
+    name = "address_protos_gen",
+    package_name = "my_address_protos",
+    deps = [":address_proto"],
+)
+
+dart_binary(
+    name = "custom_pkg_app",
+    main = "custom_pkg_main.dart",
+    deps = [":address_protos_gen"],
+)
