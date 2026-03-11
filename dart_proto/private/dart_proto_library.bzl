@@ -83,10 +83,13 @@ def _dart_proto_library_impl(ctx):
     # proto_source_root is typically "" or "." which _findPackage cannot match.
     input_root = _compute_input_root(direct_srcs)
 
-    # Build BazelPackages option for cross-package imports
+    # Build BazelPackages option for cross-package imports.
+    # Format per entry: "package_name|input_root|output_root" (see protoc_plugin/bazel.dart).
+    # output_root="." means generated files land directly in lib_dir.
+    # Entries are joined with ";" to form the BazelPackages protoc option.
     bazel_entries = []
 
-    # This target: output_root = "." so files land directly in lib_dir
+    # This target
     bazel_entries.append("%s|%s|." % (package_name, input_root))
 
     # Deps: collect from DartProtoInfo (transitive)
@@ -162,7 +165,9 @@ def _dart_proto_library_impl(ctx):
         transitive = [dep.transitive_packages for dep in all_dep_infos],
     )
 
-    # DartProtoInfo for downstream dart_proto_library targets
+    # DartProtoInfo for downstream dart_proto_library targets.
+    # Uses dart_deps (not all_dep_infos) because only proto packages need
+    # BazelPackages entries — runtime libraries don't carry DartProtoInfo.
     this_struct = struct(package_name = package_name, input_root = input_root)
     transitive_proto_infos = depset(
         direct = [this_struct],
