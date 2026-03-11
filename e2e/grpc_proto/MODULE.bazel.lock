@@ -258,7 +258,7 @@
         "bzlTransitiveDigest": "1gNUgTh6Q5UiafaVhcUk0gXI51+0TSh0ypmylzybXow=",
         "usagesDigest": "hNwV8FxzjS+k7WBHubP3igKS70b6Ug3/L6uUBuwiW0g=",
         "recordedInputs": [
-          "FILE:@@rules_dart_proto+//dart_proto/pubspec.lock a1f96877a54810a5c033bc86713fc0dee4cd637433d533b39724c4912be7371b"
+          "FILE:@@rules_dart_proto+//dart_proto/pubspec.lock f66182300551b83a98b3274c9d18780909694b859e57d23830b7d08722370f6f"
         ],
         "generatedRepoSpecs": {
           "dart_proto_deps___fe_analyzer_shared": {
