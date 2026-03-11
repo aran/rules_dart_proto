@@ -10,6 +10,6 @@ proto_library(
 dart_proto_library(
     name = "greeter_dart_proto",
     grpc = True,
-    deps = [":greeter_proto"],
     visibility = ["//visibility:public"],
+    deps = [":greeter_proto"],
 )

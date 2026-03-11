@@ -9,6 +9,6 @@ proto_library(
 
 dart_proto_library(
     name = "types_dart_proto",
-    deps = [":types_proto"],
     visibility = ["//visibility:public"],
+    deps = [":types_proto"],
 )

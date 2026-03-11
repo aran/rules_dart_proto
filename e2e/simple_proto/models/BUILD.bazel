@@ -7,13 +7,13 @@ proto_library(
         "product.proto",
         "user.proto",
     ],
-    deps = ["//address:address_proto"],
     visibility = ["//visibility:public"],
+    deps = ["//address:address_proto"],
 )
 
 dart_proto_library(
     name = "models_dart_proto",
     dart_deps = ["//address:address_dart_proto"],
-    deps = [":models_proto"],
     visibility = ["//visibility:public"],
+    deps = [":models_proto"],
 )

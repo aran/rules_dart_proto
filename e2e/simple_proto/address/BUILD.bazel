@@ -9,6 +9,6 @@ proto_library(
 
 dart_proto_library(
     name = "address_dart_proto",
-    deps = [":address_proto"],
     visibility = ["//visibility:public"],
+    deps = [":address_proto"],
 )
