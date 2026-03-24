@@ -4,5 +4,3 @@ environment:
 dependencies:
   path: ^1.8.0
   protoc_plugin: ^25.0.0
-  protobuf: ^6.0.0
-  grpc: ^5.1.0

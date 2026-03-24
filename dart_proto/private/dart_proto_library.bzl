@@ -109,9 +109,11 @@ def _dart_proto_library_impl(ctx):
     if ctx.attr.grpc:
         dart_out_opt = "grpc," + dart_out_opt
 
+    tc = ctx.toolchains["//dart_proto:toolchain_type"].dart_proto_toolchain_info
+
     args = ctx.actions.args()
 
-    plugin = ctx.executable._plugin
+    plugin = tc.plugin.executable
     args.add("--plugin=protoc-gen-dart=%s" % plugin.path)
     args.add("--dart_out=%s:%s" % (dart_out_opt, lib_dir.path))
 
@@ -131,18 +133,20 @@ def _dart_proto_library_impl(ctx):
 
     ctx.actions.run(
         mnemonic = "DartProtoGen",
-        executable = ctx.executable._protoc,
+        executable = tc.protoc.executable,
         arguments = [args],
         inputs = proto_info.transitive_sources,  # all transitive for import resolution
-        tools = [plugin],
+        tools = [tc.plugin],
         outputs = [lib_dir],
         progress_message = "Generating Dart protobuf code for %{label}",
     )
 
-    # Collect DartInfo from runtime libraries.
-    runtime_deps = [ctx.attr._protobuf_runtime[DartInfo]]
+    # Collect DartInfo from runtime libraries (provided by the toolchain).
+    runtime_deps = [tc.protobuf_runtime]
     if ctx.attr.grpc:
-        runtime_deps.append(ctx.attr._grpc_runtime[DartInfo])
+        if not tc.grpc_runtime:
+            fail("grpc = True but the dart_proto_toolchain does not provide grpc_runtime")
+        runtime_deps.append(tc.grpc_runtime)
 
     dart_dep_infos = [dep[DartInfo] for dep in ctx.attr.dart_deps]
     all_dep_infos = runtime_deps + dart_dep_infos
@@ -212,29 +216,8 @@ dart_proto_library = rule(
             doc = "If True, also generate .pbgrpc.dart files for gRPC services.",
             default = False,
         ),
-        "_protoc": attr.label(
-            doc = "The protoc compiler.",
-            default = "@protobuf//:protoc",
-            executable = True,
-            cfg = "exec",
-        ),
-        "_plugin": attr.label(
-            doc = "The protoc-gen-dart plugin (Bazel-aware).",
-            default = "//dart_proto:protoc_gen_dart_bazel",
-            executable = True,
-            cfg = "exec",
-        ),
-        "_protobuf_runtime": attr.label(
-            doc = "The Dart protobuf runtime library.",
-            default = "@dart_proto_deps//:protobuf",
-            providers = [DartInfo],
-        ),
-        "_grpc_runtime": attr.label(
-            doc = "The Dart gRPC runtime library (used when grpc = True).",
-            default = "@dart_proto_deps//:grpc",
-            providers = [DartInfo],
-        ),
     },
+    toolchains = ["//dart_proto:toolchain_type"],
     doc = """\
 Generates Dart protobuf code from a single proto_library target.
 

@@ -1,4 +1,17 @@
 load("@rules_dart//dart:defs.bzl", "dart_binary")
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_toolchain")
+
+dart_proto_toolchain(
+    name = "dart_proto_toolchain_impl",
+    grpc_runtime = "@pub_deps//:grpc",
+    protobuf_runtime = "@pub_deps//:protobuf",
+)
+
+toolchain(
+    name = "dart_proto_toolchain",
+    toolchain = ":dart_proto_toolchain_impl",
+    toolchain_type = "@rules_dart_proto//dart_proto:toolchain_type",
+)
 
 # Server binary — starts a gRPC server with the Greeter service.
 dart_binary(

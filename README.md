@@ -20,7 +20,45 @@ dart = use_extension("@rules_dart//dart:extensions.bzl", "dart")
 dart.toolchain(dart_version = "3.11.1")
 use_repo(dart, "dart_toolchains")
 register_toolchains("@dart_toolchains//:all")
+
+# Dart pub dependencies — must include protobuf (and grpc if using grpc = True)
+pub = use_extension("@rules_dart//dart/pub:extensions.bzl", "pub")
+pub.from_lock(
+    name = "pub_deps",
+    lock = "//:pubspec.lock",
+)
+use_repo(pub, "pub_deps")
+
+register_toolchains("//:dart_proto_toolchain")
 ```
+
+### Toolchain registration
+
+`dart_proto_library` requires a registered `dart_proto_toolchain` that provides the
+Dart `protobuf` (and optionally `grpc`) runtime libraries from your own pub
+dependencies. This avoids type-identity conflicts when your application code and
+generated proto code both use these packages.
+
+Add to your root `BUILD.bazel`:
+
+```starlark
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_toolchain")
+
+dart_proto_toolchain(
+    name = "dart_proto_toolchain_impl",
+    protobuf_runtime = "@pub_deps//:protobuf",
+    # grpc_runtime = "@pub_deps//:grpc",  # uncomment if using grpc = True
+)
+
+toolchain(
+    name = "dart_proto_toolchain",
+    toolchain = ":dart_proto_toolchain_impl",
+    toolchain_type = "@rules_dart_proto//dart_proto:toolchain_type",
+)
+```
+
+The build tools (`protoc` and `protoc-gen-dart`) are provided by default. Only the
+runtime libraries need to come from your dependency graph.
 
 ## Usage
 
@@ -82,7 +120,7 @@ dart_proto_library(
 
 ### gRPC
 
-Set `grpc = True` to also generate `.pbgrpc.dart` files. The `grpc` runtime library is automatically included in transitive dependencies:
+Set `grpc = True` to also generate `.pbgrpc.dart` files. The toolchain must provide `grpc_runtime` when any target uses `grpc = True`:
 
 ```starlark
 dart_proto_library(
@@ -112,6 +150,6 @@ Generated code is then imported as `package:my_app/person.pb.dart` instead of `p
 2. `dart_proto_library` runs `protoc` with the `protoc-gen-dart` plugin to generate `.pb.dart`, `.pbenum.dart`, `.pbjson.dart` (and optionally `.pbgrpc.dart`) files
 3. The generated code is returned as `DartInfo`, so it composes seamlessly with `dart_binary`, `dart_library`, and `dart_test`
 
-The `protoc-gen-dart` plugin is compiled from source using `rules_dart`, so no system Dart or PATH configuration is needed. The `protobuf` runtime library (and `grpc` when `grpc = True`) is included automatically in transitive dependencies.
+The `protoc-gen-dart` plugin is compiled from source using `rules_dart`, so no system Dart or PATH configuration is needed. The `protobuf` and `grpc` runtime libraries are provided by the consumer via `dart_proto_toolchain` to ensure type identity with the rest of the application.
 
 See `e2e/simple_proto/`, `e2e/grpc_proto/`, `e2e/diamond_proto/`, and `e2e/deep_import_proto/` for complete working examples.

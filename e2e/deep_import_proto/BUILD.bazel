@@ -1,4 +1,16 @@
 load("@rules_dart//dart:defs.bzl", "dart_test")
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_toolchain")
+
+dart_proto_toolchain(
+    name = "dart_proto_toolchain_impl",
+    protobuf_runtime = "@pub_deps//:protobuf",
+)
+
+toolchain(
+    name = "dart_proto_toolchain",
+    toolchain = ":dart_proto_toolchain_impl",
+    toolchain_type = "@rules_dart_proto//dart_proto:toolchain_type",
+)
 
 dart_test(
     name = "deep_import_test",

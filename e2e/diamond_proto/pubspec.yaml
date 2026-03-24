@@ -1,0 +1,5 @@
+name: diamond_proto_e2e
+environment:
+  sdk: ^3.4.0
+dependencies:
+  protobuf: ^6.0.0
