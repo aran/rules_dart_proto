@@ -144,6 +144,70 @@ dart_proto_library(
 
 Generated code is then imported as `package:my_app/person.pb.dart` instead of `package:person_protos_gen/person.pb.dart`.
 
+### IDE analysis support
+
+By default, generated proto code lives only in Bazel's output tree, so the Dart
+analysis server (and your IDE) cannot see it. The `dart_proto_analysis_package`
+macro copies generated files to the source tree and creates a `pubspec.yaml`,
+making them visible to the analysis server.
+
+Add `aspect_bazel_lib` to your `MODULE.bazel`:
+
+```starlark
+bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
+```
+
+Then create one analysis package per `dart_proto_library` target:
+
+```starlark
+load("@rules_dart_proto//dart_proto:analysis.bzl", "dart_proto_analysis_package")
+
+dart_proto_analysis_package(
+    name = "write_echo_analysis_pkg",
+    dart_proto = "//echo:echo_dart_proto",
+    path = "echo_analysis",
+)
+```
+
+Sync the files:
+
+```sh
+bazel run //:write_echo_analysis_pkg
+```
+
+Then add the generated package as a path dependency in your `pubspec.yaml`:
+
+```yaml
+dependency_overrides:
+  echo_dart_proto:
+    path: echo_analysis
+```
+
+Run `dart pub get` and the analysis server will pick up the proto types.
+
+**CI staleness check:** A `write_echo_analysis_pkg_tests` target is
+auto-generated. Add it to your test suite to catch stale analysis packages.
+
+**Gazelle:** If you use the `rules_dart` Gazelle plugin, add
+`# gazelle:exclude <path>` directives to prevent it from processing the
+generated Dart files:
+
+```starlark
+# gazelle:exclude echo_analysis
+```
+
+**gRPC:** Pass `grpc = True` when the `dart_proto_library` uses gRPC, so the
+generated `pubspec.yaml` includes the `grpc` dependency:
+
+```starlark
+dart_proto_analysis_package(
+    name = "write_greeter_analysis_pkg",
+    dart_proto = "//greeter:greeter_dart_proto",
+    path = "greeter_analysis",
+    grpc = True,
+)
+```
+
 ## How it works
 
 1. `proto_library` defines your `.proto` sources (from `rules_proto`)
@@ -152,4 +216,4 @@ Generated code is then imported as `package:my_app/person.pb.dart` instead of `p
 
 The `protoc-gen-dart` plugin is compiled from source using `rules_dart`, so no system Dart or PATH configuration is needed. The `protobuf` and `grpc` runtime libraries are provided by the consumer via `dart_proto_toolchain` to ensure type identity with the rest of the application.
 
-See `e2e/simple_proto/`, `e2e/grpc_proto/`, `e2e/diamond_proto/`, and `e2e/deep_import_proto/` for complete working examples.
+See `e2e/simple_proto/`, `e2e/grpc_proto/`, `e2e/diamond_proto/`, `e2e/deep_import_proto/`, and `e2e/analysis_pkg/` for complete working examples.

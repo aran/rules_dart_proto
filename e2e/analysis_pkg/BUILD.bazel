@@ -1,0 +1,34 @@
+# gazelle:exclude echo_analysis
+
+load("@gazelle//:def.bzl", "gazelle", "gazelle_binary")
+load("@rules_dart_proto//dart_proto:analysis.bzl", "dart_proto_analysis_package")
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_toolchain")
+
+dart_proto_toolchain(
+    name = "dart_proto_toolchain_impl",
+    protobuf_runtime = "@pub_deps//:protobuf",
+)
+
+toolchain(
+    name = "dart_proto_toolchain",
+    toolchain = ":dart_proto_toolchain_impl",
+    toolchain_type = "@rules_dart_proto//dart_proto:toolchain_type",
+)
+
+dart_proto_analysis_package(
+    name = "write_echo_analysis_pkg",
+    dart_proto = "//echo:echo_dart_proto",
+    path = "echo_analysis",
+)
+
+gazelle_binary(
+    name = "gazelle_bin",
+    languages = [
+        "@rules_dart//gazelle/dart",
+    ],
+)
+
+gazelle(
+    name = "gazelle",
+    gazelle = "gazelle_bin",
+)

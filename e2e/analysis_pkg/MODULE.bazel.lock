@@ -46,7 +46,6 @@
     "https://bcr.bazel.build/modules/bazel_features/1.4.1/MODULE.bazel": "e45b6bb2350aff3e442ae1111c555e27eac1d915e77775f6fdc4b351b758b5d7",
     "https://bcr.bazel.build/modules/bazel_features/1.9.0/MODULE.bazel": "885151d58d90d8d9c811eb75e3288c11f850e1d6b481a8c9f766adee4712358b",
     "https://bcr.bazel.build/modules/bazel_features/1.9.1/MODULE.bazel": "8f679097876a9b609ad1f60249c49d68bfab783dd9be012faf9d82547b14815a",
-    "https://bcr.bazel.build/modules/bazel_lib/3.0.0-rc.0/MODULE.bazel": "d6e00979a98ac14ada5e31c8794708b41434d461e7e7ca39b59b765e6d233b18",
     "https://bcr.bazel.build/modules/bazel_lib/3.0.0/MODULE.bazel": "22b70b80ac89ad3f3772526cd9feee2fa412c2b01933fea7ed13238a448d370d",
     "https://bcr.bazel.build/modules/bazel_lib/3.0.0/source.json": "895f21909c6fba01d7c17914bb6c8e135982275a1b18cdaa4e62272217ef1751",
     "https://bcr.bazel.build/modules/bazel_skylib/1.0.3/MODULE.bazel": "bcb0fd896384802d1ad283b4e4eb4d718eebd8cb820b0a2c3a347fb971afd9d8",
@@ -66,9 +65,6 @@
     "https://bcr.bazel.build/modules/bazel_skylib/1.9.0/source.json": "7ad77c1e8c1b84222d9b3f3cae016a76639435744c19330b0b37c0a3c9da7dc0",
     "https://bcr.bazel.build/modules/bazelrc-preset.bzl/1.9.2/MODULE.bazel": "9354bc3d91ee66e804642419af601b853e3228f6493f9263d51c5cd7b25c2a55",
     "https://bcr.bazel.build/modules/bazelrc-preset.bzl/1.9.2/source.json": "d78791185eae5a8af3a5793f312f0ba21185bd8a115b9419fb99527d03ab112b",
-    "https://bcr.bazel.build/modules/buildifier_prebuilt/7.3.1/MODULE.bazel": "537faf0ad9f5892910074b8e43b4c91c96f1d5d86b6ed04bdbe40cf68aa48b68",
-    "https://bcr.bazel.build/modules/buildifier_prebuilt/8.2.1.2/MODULE.bazel": "6d078b1d6ddccb91b3090853945fbfdd41169bb2b2c1dd00fbd388f0be1b09f5",
-    "https://bcr.bazel.build/modules/buildifier_prebuilt/8.2.1.2/source.json": "93439c253ffe47da41f6b4b85807b4e14fefa5424b7af533a740a374e40c00f2",
     "https://bcr.bazel.build/modules/buildozer/8.2.1/MODULE.bazel": "61e9433c574c2bd9519cad7fa66b9c1d2b8e8d5f3ae5d6528a2c2d26e68d874d",
     "https://bcr.bazel.build/modules/buildozer/8.2.1/source.json": "7c33f6a26ee0216f85544b4bca5e9044579e0219b6898dd653f5fb449cf2e484",
     "https://bcr.bazel.build/modules/gawk/5.3.2.bcr.1/MODULE.bazel": "cdf8cbe5ee750db04b78878c9633cc76e80dcf4416cbe982ac3a9222f80713c8",
@@ -189,8 +185,6 @@
     "https://bcr.bazel.build/modules/rules_license/0.0.7/MODULE.bazel": "088fbeb0b6a419005b89cf93fe62d9517c0a2b8bb56af3244af65ecfe37e7d5d",
     "https://bcr.bazel.build/modules/rules_license/1.0.0/MODULE.bazel": "a7fda60eefdf3d8c827262ba499957e4df06f659330bbe6cdbdb975b768bb65c",
     "https://bcr.bazel.build/modules/rules_license/1.0.0/source.json": "a52c89e54cc311196e478f8382df91c15f7a2bfdf4c6cd0e2675cc2ff0b56efb",
-    "https://bcr.bazel.build/modules/rules_multitool/1.11.1/MODULE.bazel": "f826d2d394e8d964e44ebb4a75ebcfe4e9cd4eb150e2ddcd60398ffeb939696a",
-    "https://bcr.bazel.build/modules/rules_multitool/1.11.1/source.json": "201f43de1d35bd17f25a4fed3ba5a2ec500ef5e08b7d4b341bb9fd39cef0cbc6",
     "https://bcr.bazel.build/modules/rules_pkg/0.7.0/MODULE.bazel": "df99f03fc7934a4737122518bb87e667e62d780b610910f0447665a7e2be62dc",
     "https://bcr.bazel.build/modules/rules_pkg/1.0.1/MODULE.bazel": "5b1df97dbc29623bccdf2b0dcd0f5cb08e2f2c9050aab1092fd39a41e82686ff",
     "https://bcr.bazel.build/modules/rules_pkg/1.0.1/source.json": "bd82e5d7b9ce2d31e380dd9f50c111d678c3bdaca190cb76b0e1c71b05e1ba8a",
@@ -287,11 +281,88 @@
     "@@rules_dart+//dart/pub:extensions.bzl%pub": {
       "general": {
         "bzlTransitiveDigest": "1gNUgTh6Q5UiafaVhcUk0gXI51+0TSh0ypmylzybXow=",
-        "usagesDigest": "4+KKoCh+aDpLMozoUlkXxR5kDzsyiZYy9QcbStvl0gE=",
+        "usagesDigest": "APk0vgdybIH16a9TSq59g9fXA4KwlSXLUcKSsBn9exk=",
         "recordedInputs": [
-          "FILE:@@//dart_proto/pubspec.lock b4309566994c7411213ee310d6e3d1ae1dc4cc66c272da8dccc0eb9861abbd11"
+          "FILE:@@//pubspec.lock 3a202d57220a45bf82df2d85e8c3e00000503a70c01fb9adda246d8cb91c55c9",
+          "FILE:@@rules_dart_proto+//dart_proto/pubspec.lock b4309566994c7411213ee310d6e3d1ae1dc4cc66c272da8dccc0eb9861abbd11"
         ],
         "generatedRepoSpecs": {
+          "pub_deps__collection": {
+            "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
+            "attributes": {
+              "package_name": "collection",
+              "version": "1.19.1",
+              "sha256": "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76",
+              "base_url": "https://pub.dev",
+              "hub_name": "pub_deps",
+              "lock_packages": [
+                "collection",
+                "fixnum",
+                "meta",
+                "protobuf"
+              ]
+            }
+          },
+          "pub_deps__fixnum": {
+            "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
+            "attributes": {
+              "package_name": "fixnum",
+              "version": "1.1.1",
+              "sha256": "b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be",
+              "base_url": "https://pub.dev",
+              "hub_name": "pub_deps",
+              "lock_packages": [
+                "collection",
+                "fixnum",
+                "meta",
+                "protobuf"
+              ]
+            }
+          },
+          "pub_deps__meta": {
+            "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
+            "attributes": {
+              "package_name": "meta",
+              "version": "1.18.2",
+              "sha256": "df0c643f44ad098eb37988027a8e2b2b5a031fd3977f06bbfd3a76637e8df739",
+              "base_url": "https://pub.dev",
+              "hub_name": "pub_deps",
+              "lock_packages": [
+                "collection",
+                "fixnum",
+                "meta",
+                "protobuf"
+              ]
+            }
+          },
+          "pub_deps__protobuf": {
+            "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
+            "attributes": {
+              "package_name": "protobuf",
+              "version": "6.0.0",
+              "sha256": "75ec242d22e950bdcc79ee38dd520ce4ee0bc491d7fadc4ea47694604d22bf06",
+              "base_url": "https://pub.dev",
+              "hub_name": "pub_deps",
+              "lock_packages": [
+                "collection",
+                "fixnum",
+                "meta",
+                "protobuf"
+              ]
+            }
+          },
+          "pub_deps": {
+            "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_hub.bzl%pub_lock_hub",
+            "attributes": {
+              "hub_name": "pub_deps",
+              "packages": [
+                "collection",
+                "fixnum",
+                "meta",
+                "protobuf"
+              ]
+            }
+          },
           "dart_proto_deps___fe_analyzer_shared": {
             "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
             "attributes": {
@@ -1131,6 +1202,7 @@
         },
         "moduleExtensionMetadata": {
           "explicitRootModuleDirectDeps": [
+            "pub_deps",
             "dart_proto_deps"
           ],
           "explicitRootModuleDirectDevDeps": [],

@@ -30,6 +30,13 @@ bzl_library(
     ],
 )
 
+bzl_library(
+    name = "analysis",
+    srcs = ["analysis.bzl"],
+    visibility = ["//visibility:public"],
+    deps = ["//dart_proto/private:analysis_package"],
+)
+
 exports_files([
     "pubspec.lock",
     "pubspec.yaml",
