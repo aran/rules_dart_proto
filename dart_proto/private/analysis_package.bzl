@@ -63,6 +63,7 @@ def dart_proto_analysis_package(name, dart_proto, path, package_name = None, grp
     ]
     if grpc:
         lines.append("  grpc: ^5.1.0")
+    lines.append("")  # trailing newline
 
     write_file(
         name = pubspec_name,

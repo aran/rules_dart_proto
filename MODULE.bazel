@@ -43,7 +43,6 @@ bazel_dep(name = "buildifier_prebuilt", version = "8.5.1", dev_dependency = True
 # TODO: remove once protobuf upgrades to a rules_android version compatible
 # with Bazel 9.0.1 (rules_android 0.6.4 uses the removed CcInfo builtin).
 bazel_dep(name = "rules_android", version = "0.7.1")
-
 bazel_dep(name = "bazelrc-preset.bzl", version = "1.9.2")
 
 # Dart toolchain (needed to compile protoc-gen-dart plugin)
