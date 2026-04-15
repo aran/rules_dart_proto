@@ -1,10 +1,3 @@
 # Ensure consistent line endings across platforms. Bazel's MODULE.bazel.lock
 # hashes file contents, so CRLF vs LF differences cause lockfile mismatches.
 * text=auto eol=lf
-
-#################################
-# Configuration for 'git archive'
-# See https://git-scm.com/docs/git-archive#ATTRIBUTES
-
-# Don't include e2e tests in the distribution artifact, to reduce size.
-e2e export-ignore
