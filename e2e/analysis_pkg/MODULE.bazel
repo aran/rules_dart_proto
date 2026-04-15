@@ -7,7 +7,7 @@ bazel_dep(name = "rules_dart_proto", version = "0.0.0")
 bazel_dep(name = "rules_proto", version = "7.1.0")
 bazel_dep(name = "protobuf", version = "34.1")
 bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
-bazel_dep(name = "gazelle", version = "0.47.0")
+bazel_dep(name = "gazelle", version = "0.50.0")
 bazel_dep(name = "rules_go", version = "0.60.0", repo_name = "io_bazel_rules_go")
 
 local_path_override(
@@ -26,6 +26,6 @@ pub.from_lock(
     name = "pub_deps",
     lock = "//:pubspec.lock",
 )
-use_repo(pub, "dart_proto_deps", "pub_deps")
+use_repo(pub, "pub_deps")
 
 register_toolchains("//:dart_proto_toolchain")
