@@ -4,33 +4,33 @@
     "binaries": [
       {
         "kind": "archive",
-        "url": "https://github.com/crate-ci/typos/releases/download/v1.45.2/typos-v1.45.2-aarch64-apple-darwin.tar.gz",
+        "url": "https://github.com/crate-ci/typos/releases/download/v1.46.2/typos-v1.46.2-aarch64-apple-darwin.tar.gz",
         "file": "./typos",
-        "sha256": "65f3f46b03383992aa96d07a88e7859ed21fd3e3314691c65079e39461c2b38e",
+        "sha256": "4b15ee9548cd68cf22d6e67af8a12ceb608ea4dbc34e0346792d09994222d694",
         "os": "macos",
         "cpu": "arm64"
       },
       {
         "kind": "archive",
-        "url": "https://github.com/crate-ci/typos/releases/download/v1.45.2/typos-v1.45.2-x86_64-apple-darwin.tar.gz",
+        "url": "https://github.com/crate-ci/typos/releases/download/v1.46.2/typos-v1.46.2-x86_64-apple-darwin.tar.gz",
         "file": "./typos",
-        "sha256": "3ff87158bdcbc4e0886a0ed291f372cc31cd2ff489d0541cea4c3c251f4f4ad5",
+        "sha256": "3652f90d82d38f64e40c1791d2d82209979048ef3abd715b0eb1488cf483ce1d",
         "os": "macos",
         "cpu": "x86_64"
       },
       {
         "kind": "archive",
-        "url": "https://github.com/crate-ci/typos/releases/download/v1.45.2/typos-v1.45.2-aarch64-unknown-linux-musl.tar.gz",
+        "url": "https://github.com/crate-ci/typos/releases/download/v1.46.2/typos-v1.46.2-aarch64-unknown-linux-musl.tar.gz",
         "file": "./typos",
-        "sha256": "838aad0c2a22ef4d8b4195fc288e6d7d94ba54871adc6414caa8199780ae1ef5",
+        "sha256": "311f2a15e8433c895cd9ee3198530bbff552f59609eba739f5bd9ceb2a2c0887",
         "os": "linux",
         "cpu": "arm64"
       },
       {
         "kind": "archive",
-        "url": "https://github.com/crate-ci/typos/releases/download/v1.45.2/typos-v1.45.2-x86_64-unknown-linux-musl.tar.gz",
+        "url": "https://github.com/crate-ci/typos/releases/download/v1.46.2/typos-v1.46.2-x86_64-unknown-linux-musl.tar.gz",
         "file": "./typos",
-        "sha256": "8463790818b926ef97bd03633ba8943549040d7defd3951e8518903f01d360a8",
+        "sha256": "d68c1a9c5abd8de11f7749edfa414087c8bc828e89064714487d23c89f36b06e",
         "os": "linux",
         "cpu": "x86_64"
       }
