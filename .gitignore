@@ -3,3 +3,4 @@ bazel-*
 .dart_tool/
 .idea/
 .ijwb/
+e2e/analysis_pkg/echo_analysis/pubspec.lock
