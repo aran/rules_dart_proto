@@ -92,7 +92,8 @@
     "https://bcr.bazel.build/modules/gazelle/0.40.0/MODULE.bazel": "42ba5378ebe845fca43989a53186ab436d956db498acde790685fe0e8f9c6146",
     "https://bcr.bazel.build/modules/gazelle/0.47.0/MODULE.bazel": "b61bb007c4efad134aa30ee7f4a8e2a39b22aa5685f005edaa022fbd1de43ebc",
     "https://bcr.bazel.build/modules/gazelle/0.50.0/MODULE.bazel": "5dce69aa1d7b5bc85d1e1cfe61f0a9a27426c46425ec1d064685f941a5977329",
-    "https://bcr.bazel.build/modules/gazelle/0.50.0/source.json": "3cadcd284172c4274dc44c71b571f08ec4f22b28d5e9ad2708347c6e6c3a41b9",
+    "https://bcr.bazel.build/modules/gazelle/0.51.0/MODULE.bazel": "74610189cc04e27cc2cc286eaffb98c9b43fe59fdf2980b086922eea79f4a236",
+    "https://bcr.bazel.build/modules/gazelle/0.51.0/source.json": "d69adfa4f68bbdce6a93a4a4b518cb4ee2fd5051366e4a33d3b7b42d749d0ae1",
     "https://bcr.bazel.build/modules/google_benchmark/1.8.2/MODULE.bazel": "a70cf1bba851000ba93b58ae2f6d76490a9feb74192e57ab8e8ff13c34ec50cb",
     "https://bcr.bazel.build/modules/googletest/1.11.0/MODULE.bazel": "3a83f095183f66345ca86aa13c58b59f9f94a2f81999c093d4eeaa2d262d12f4",
     "https://bcr.bazel.build/modules/googletest/1.14.0.bcr.1/MODULE.bazel": "22c31a561553727960057361aa33bf20fb2e98584bc4fec007906e27053f80c6",
@@ -390,10 +391,10 @@
     "@@rules_dart+//dart/pub:extensions.bzl%pub": {
       "general": {
         "bzlTransitiveDigest": "VT9EBfrLCOF8YxuQcmnFip68BL+d4xtBnd79T5NWd1w=",
-        "usagesDigest": "VDfHISdKnTI8BFMQPxqiouCCjzdxMCWYCHidNVEW/ug=",
+        "usagesDigest": "APk0vgdybIH16a9TSq59g9fXA4KwlSXLUcKSsBn9exk=",
         "recordedInputs": [
           "FILE:@@//pubspec.lock 3a202d57220a45bf82df2d85e8c3e00000503a70c01fb9adda246d8cb91c55c9",
-          "FILE:@@rules_dart_proto+//dart_proto/pubspec.lock fe87587292e1c080f0f585127897fb53ca0aa4ed1a8ee12182732969a3e9b1d2"
+          "FILE:@@rules_dart_proto+//dart_proto/pubspec.lock 5f24e42b085b0e6c658bae07f653d990b76eba6379e2745190eb3ffa7ed8b838"
         ],
         "generatedRepoSpecs": {
           "dart_pub__collection": {
@@ -750,8 +751,8 @@
             "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
             "attributes": {
               "package_name": "dart_style",
-              "version": "3.1.6",
-              "sha256": "6f6b30cba0301e7b38f32bdc9a6bdae6f5921a55f0a1eb9450e1e6515645dbb2",
+              "version": "3.1.7",
+              "sha256": "29f7ecc274a86d32920b1d9cfc7502fa87220da41ec60b55f329559d5732e2b2",
               "base_url": "https://pub.dev",
               "hub_name": "dart_pub",
               "lock_packages": [
