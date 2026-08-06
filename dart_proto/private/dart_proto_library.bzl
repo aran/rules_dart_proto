@@ -1,7 +1,8 @@
 """Implementation of the dart_proto_library rule."""
 
 load("@protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
-load("@rules_dart//dart:providers.bzl", "DartInfo", "DartPackageInfo")
+load("@rules_dart//dart:providers.bzl", "DartInfo")
+load("@rules_dart//dart:utils.bzl", "dart_info")
 
 DartProtoInfo = provider(
     doc = "Proto-specific info for downstream dart_proto_library deps.",
@@ -141,33 +142,16 @@ def _dart_proto_library_impl(ctx):
         progress_message = "Generating Dart protobuf code for %{label}",
     )
 
-    # Collect DartInfo from runtime libraries (provided by the toolchain).
+    # Runtime libraries come from the toolchain as targets, so they go into
+    # `dart_info`'s `deps` beside the proto deps and are merged the same way.
     runtime_deps = [tc.protobuf_runtime]
     if ctx.attr.grpc:
         if not tc.grpc_runtime:
             fail("grpc = True but the dart_proto_toolchain does not provide grpc_runtime")
         runtime_deps.append(tc.grpc_runtime)
 
-    dart_dep_infos = [dep[DartInfo] for dep in ctx.attr.dart_deps]
-    all_dep_infos = runtime_deps + dart_dep_infos
-
     # lib_root: short_path to the package root (parent of lib/).
     lib_root = lib_dir.short_path.rsplit("/", 1)[0]
-
-    this_pkg = DartPackageInfo(
-        package_name = package_name,
-        lib_root = lib_root,
-    )
-
-    transitive_srcs = depset(
-        direct = [lib_dir],
-        transitive = [dep.transitive_srcs for dep in all_dep_infos],
-    )
-
-    transitive_packages = depset(
-        direct = [this_pkg],
-        transitive = [dep.transitive_packages for dep in all_dep_infos],
-    )
 
     # DartProtoInfo for downstream dart_proto_library targets.
     # Uses dart_deps (not all_dep_infos) because only proto packages need
@@ -183,11 +167,19 @@ def _dart_proto_library_impl(ctx):
             files = depset([lib_dir]),
             runfiles = ctx.runfiles(files = [lib_dir]),
         ),
-        DartInfo(
+        # The generated package is one tree artifact of Dart and nothing else,
+        # so `srcs` is that directory and there are no resources of its own.
+        # Its dependencies' resources still have to arrive: a `dart_binary`
+        # whose only dep is a proto target reaches the gRPC runtime's `.proto`
+        # files — shipped inside its `lib/` — through this node or not at all.
+        # `dart_info` does that merge, and every other, without this rule
+        # naming a single `DartInfo` field.
+        dart_info(
+            label = ctx.label,
             package_name = package_name,
             lib_root = lib_root,
-            transitive_srcs = transitive_srcs,
-            transitive_packages = transitive_packages,
+            deps = runtime_deps + ctx.attr.dart_deps,
+            srcs = [lib_dir],
         ),
         DartProtoInfo(
             package_name = package_name,

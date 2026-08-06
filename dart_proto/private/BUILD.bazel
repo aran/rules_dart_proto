@@ -11,7 +11,10 @@ bzl_library(
     name = "dart_proto_library",
     srcs = ["dart_proto_library.bzl"],
     visibility = ["//dart_proto:__pkg__"],
-    deps = [":toolchain"],
+    deps = [
+        ":toolchain",
+        "@rules_dart//dart:utils",
+    ],
 )
 
 bzl_library(

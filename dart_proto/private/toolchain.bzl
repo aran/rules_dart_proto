@@ -15,8 +15,8 @@ dependency graph to avoid type-identity conflicts (the "diamond problem").
     fields = {
         "protoc": "FilesToRunProvider for the protoc compiler.",
         "plugin": "FilesToRunProvider for the protoc-gen-dart plugin.",
-        "protobuf_runtime": "DartInfo for the Dart protobuf runtime library.",
-        "grpc_runtime": "DartInfo for the Dart gRPC runtime library, or None.",
+        "protobuf_runtime": "Target providing DartInfo for the Dart protobuf runtime library. Kept as the target rather than the extracted provider so it can be handed to `dart_info()`, which merges dependency closures itself.",
+        "grpc_runtime": "Target providing DartInfo for the Dart gRPC runtime library, or None.",
     },
 )
 
@@ -25,8 +25,8 @@ def _dart_proto_toolchain_impl(ctx):
         dart_proto_toolchain_info = DartProtoToolchainInfo(
             protoc = ctx.attr.protoc[DefaultInfo].files_to_run,
             plugin = ctx.attr.plugin[DefaultInfo].files_to_run,
-            protobuf_runtime = ctx.attr.protobuf_runtime[DartInfo],
-            grpc_runtime = ctx.attr.grpc_runtime[DartInfo] if ctx.attr.grpc_runtime else None,
+            protobuf_runtime = ctx.attr.protobuf_runtime,
+            grpc_runtime = ctx.attr.grpc_runtime or None,
         ),
     )]
 
