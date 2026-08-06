@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref_name != 'main' }}
 jobs:
   test:
-    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.6.0
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.7.0
     with:
       bazel_versions: '["9.2.0"]'
       # Exit code 4 means "build succeeded but no test targets found", which is
@@ -39,7 +39,7 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: pre-commit/action@v3.0.1
   # For branch protection settings, this job provides a "stable" name that can be used to gate PR merges
   # on "all matrix jobs were successful".
