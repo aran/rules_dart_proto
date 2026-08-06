@@ -14,6 +14,7 @@ toolchain(
 
 dart_test(
     name = "deep_import_test",
+    size = "small",
     main = "deep_import_test.dart",
     deps = [
         "//app/frontend:frontend_dart_proto",
