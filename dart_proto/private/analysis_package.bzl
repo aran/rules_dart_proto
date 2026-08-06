@@ -1,6 +1,6 @@
 """Macro to write dart_proto_library output to the source tree for IDE analysis."""
 
-load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 
 def _target_name(label_str):

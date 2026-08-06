@@ -17,7 +17,7 @@ bazel_dep(name = "rules_proto", version = "7.1.0")
 bazel_dep(name = "protobuf", version = "34.1")
 
 dart = use_extension("@rules_dart//dart:extensions.bzl", "dart")
-dart.toolchain(dart_version = "3.12.1")
+dart.toolchain(dart_version = "3.12.2")
 use_repo(dart, "dart_toolchains")
 register_toolchains("@dart_toolchains//:all")
 
@@ -151,10 +151,10 @@ analysis server (and your IDE) cannot see it. The `dart_proto_analysis_package`
 macro copies generated files to the source tree and creates a `pubspec.yaml`,
 making them visible to the analysis server.
 
-Add `aspect_bazel_lib` to your `MODULE.bazel`:
+Add `bazel_lib` to your `MODULE.bazel`:
 
 ```starlark
-bazel_dep(name = "aspect_bazel_lib", version = "2.22.5")
+bazel_dep(name = "bazel_lib", version = "3.5.0")
 ```
 
 Then create one analysis package per `dart_proto_library` target:

@@ -19,7 +19,7 @@ bzl_library(
     srcs = ["analysis_package.bzl"],
     visibility = ["//dart_proto:__pkg__"],
     deps = [
-        "@aspect_bazel_lib//lib:write_source_files",
+        "@bazel_lib//lib:write_source_files",
         "@bazel_skylib//rules:write_file",
     ],
 )
