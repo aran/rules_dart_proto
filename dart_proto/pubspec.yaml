@@ -4,3 +4,8 @@ environment:
 dependencies:
   path: ^1.8.0
   protoc_plugin: ^25.0.0
+dev_dependencies:
+  # Holds the shared transitive graph on rules_dart dart/ext's analyzer
+  # line - drift_dev caps analyzer <14, and cross-lock versions must match.
+  analyzer: ^13.0.0
+  package_config: ^2.2.0
