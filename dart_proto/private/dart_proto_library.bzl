@@ -178,6 +178,13 @@ def _dart_proto_library_impl(ctx):
             label = ctx.label,
             package_name = package_name,
             lib_root = lib_root,
+            # Generated protobuf code is a package with no `pubspec.yaml`, so
+            # there is no `environment.sdk` lower bound to derive a language
+            # version from and nothing for a developer to state: `""` is the
+            # answer, not an omission. It travels as its own package, distinct
+            # from the one whose BUILD file names this target, so it does not
+            # inherit that package's version either.
+            language_version = "",
             deps = runtime_deps + ctx.attr.dart_deps,
             srcs = [lib_dir],
         ),
