@@ -1,0 +1,16 @@
+# Checks every commit pushed to main against the commit policy in AGENTS.md:
+# conventional-commit subject (tag.yaml derives the next version from it) and
+# `Changelog:` trailers. Commits land directly on main, so this runs on push.
+name: Commits
+on:
+  push:
+    branches: [main]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Check commit messages
+        run: bazel run //tools/changelog:check -- --range "${{ github.event.before }}..${{ github.sha }}"

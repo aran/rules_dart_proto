@@ -48,8 +48,19 @@ chmod +x .git/hooks/pre-commit
 pre-commit install
 ```
 
-This runs the full hook suite including prettier, commitizen, and file
-hygiene checks.
+This runs the full hook suite including prettier and file hygiene checks.
+
+## Commit messages
+
+Commit messages follow the policy in [AGENTS.md](AGENTS.md): a
+conventional-commit subject and, for user-visible changes, a `Changelog:`
+trailer. Install the check as a commit-msg hook with:
+
+```shell
+pre-commit install --hook-type commit-msg
+```
+
+or run it on a range with `bazel run //tools/changelog:check -- --range A..B`.
 
 ## Running tests
 

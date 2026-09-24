@@ -22,3 +22,10 @@ Add to your \`MODULE.bazel\` file:
 bazel_dep(name = "rules_dart_proto", version = "${TAG:1}")
 \`\`\`
 EOF
+
+# Release notes from the `Changelog:` trailers since the previous version tag.
+# The reusable workflow checks out only the tagged commit, at depth 1.
+git fetch --quiet --unshallow --tags origin
+echo
+bazel run @multitool//tools/git-cliff -- \
+    --workdir "$PWD" --config cliff.toml --strip header --current
