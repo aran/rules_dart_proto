@@ -167,7 +167,7 @@ Central reference for all recurring maintenance tasks.
 - `multitool.lock.json` — tool versions, URLs, and SHA-256 hashes
 - `.pre-commit-config.yaml` — matching `rev:` values for yamlfmt and typos
 
-**Managed tools**: `yamlfmt`, `typos`
+**Managed tools**: `git-cliff`, `prek`, `typos`, `yamlfmt`
 
 **Procedure**:
 
@@ -181,11 +181,15 @@ Central reference for all recurring maintenance tasks.
 
 **Verification**: Both tools run successfully against the repo.
 
+When bumping prek, update `prek-version` in `.github/workflows/ci.yaml` to
+match, and run `uv tool upgrade prek` so the installed git hooks use the new
+version.
+
 ---
 
-## Pre-commit Hook Bumps
+## Git Hook Bumps
 
-**Trigger**: New versions of pre-commit hooks.
+**Trigger**: New versions of the git hooks.
 
 **Files**:
 
@@ -195,15 +199,17 @@ Central reference for all recurring maintenance tasks.
 
 - `pre-commit/pre-commit-hooks` — general file checks
 - `keith/pre-commit-buildifier` — buildifier formatting/linting
-- `commitizen-tools/commitizen` — conventional commit enforcement
 - `pre-commit/mirrors-prettier` — prettier formatting
 - `google/yamlfmt` — YAML formatting (keep in sync with `multitool.lock.json`)
 - `crate-ci/typos` — spell checking (keep in sync with `multitool.lock.json`)
 
-**Procedure**: Mostly handled by Renovate (`:enablePreCommit` preset). For
-yamlfmt and typos, ensure versions match `multitool.lock.json`.
+**Procedure**: Renovate (`:enablePreCommit` preset) bumps the hook `rev:`
+values in `.pre-commit-config.yaml`. For yamlfmt and typos, ensure versions
+match `multitool.lock.json`. prek itself is bumped by hand: its entry in
+`multitool.lock.json` and `prek-version` in `.github/workflows/ci.yaml` (see
+Multitool Version Bumps).
 
-**Verification**: `pre-commit run --all-files` passes.
+**Verification**: `prek run --all-files` passes.
 
 ---
 
@@ -218,7 +224,7 @@ yamlfmt and typos, ensure versions match `multitool.lock.json`.
 - `actions/checkout`
 - `amannn/action-semantic-pull-request`
 - `smlx/ccv`
-- `pre-commit/action`
+- `j178/prek-action`
 - `technote-space/workflow-conclusion-action`
 - `bazel-contrib/.github` (reusable CI + release workflows)
 - `bazel-contrib/publish-to-bcr`
