@@ -26,6 +26,13 @@ common --config=ruleset
 # also affects the contents of the lock file.
 common --lockfile_mode=error
 
+# Run `dart analyze` and the `dart format` check over every Dart target
+# `bazel test` builds, against the options files listed in //tools/analysis:analysis_config.
+test --aspects=@rules_dart//dart:analyze.bzl%dart_analyze
+test --output_groups=+dart_analyze
+test --output_groups=+dart_format
+common --@rules_dart//dart:analysis_config=//tools/analysis:analysis_config
+
 # Load any settings specific to the current user.
 # .bazelrc.user should appear in .gitignore so that settings are not shared with team members
 # This needs to be last statement in this

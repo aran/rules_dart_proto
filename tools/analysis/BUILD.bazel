@@ -1,0 +1,16 @@
+load("@rules_dart//dart:defs.bzl", "dart_analysis_config", "dart_analysis_options")
+
+# Kept out of the root package: every target in this module depends on
+# //:package_metadata, so a root BUILD.bazel that loads rules_dart symbols
+# fails to load for any dependant on an older rules_dart.
+dart_analysis_options(
+    name = "analysis_options",
+    src = "//:analysis_options.yaml",
+)
+
+# Every analysis_options.yaml in the repository; each Dart file is checked
+# against the nearest one above it.
+dart_analysis_config(
+    name = "analysis_config",
+    options = [":analysis_options"],
+)
