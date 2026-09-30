@@ -12,10 +12,14 @@ void main() {
     ..common = c;
 
   // Same Common type — no diamond problem
-  assert(person.common.value == order.common.value,
-      'Common values should match');
-  assert(person.common.runtimeType == order.common.runtimeType,
-      'Common types should be identical (no diamond)');
+  assert(
+    person.common.value == order.common.value,
+    'Common values should match',
+  );
+  assert(
+    person.common.runtimeType == order.common.runtimeType,
+    'Common types should be identical (no diamond)',
+  );
 
   // Roundtrip
   final personBytes = person.writeToBuffer();

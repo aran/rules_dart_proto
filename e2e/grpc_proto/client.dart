@@ -5,9 +5,7 @@ Future<void> main() async {
   final channel = ClientChannel(
     'localhost',
     port: 50051,
-    options: const ChannelOptions(
-      credentials: ChannelCredentials.insecure(),
-    ),
+    options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
   );
 
   final stub = GreeterClient(channel);

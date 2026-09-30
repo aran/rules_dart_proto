@@ -28,7 +28,10 @@ void main() {
   assert(person2.name == 'Alice', 'name mismatch');
   assert(person2.age == 30, 'age mismatch');
   assert(person2.email == 'alice@example.com', 'email mismatch');
-  assert(person2.homeAddress.street == '123 Main St', 'nested address mismatch');
+  assert(
+    person2.homeAddress.street == '123 Main St',
+    'nested address mismatch',
+  );
 
   // Default values
   final empty = Person();
@@ -49,7 +52,10 @@ void main() {
   assert(product2.name == 'Widget', 'product name mismatch');
   assert(product2.price == 999, 'product price mismatch');
   assert(product2.seller.username == 'bob', 'seller username mismatch');
-  assert(product2.seller.address.city == 'Springfield', 'seller address mismatch');
+  assert(
+    product2.seller.address.city == 'Springfield',
+    'seller address mismatch',
+  );
 
   print('All proto tests passed!');
 }

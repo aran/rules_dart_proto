@@ -33,11 +33,16 @@ void main() {
   final event2 = Event.fromBuffer(eventBytes);
   assert(event2.name == 'click', 'event name mismatch');
   assert(event2.metadata.creator == 'test', 'event metadata mismatch');
-  assert(event2.originatingRequest.endpoint == '/api/v2/foo', 'event request mismatch');
+  assert(
+    event2.originatingRequest.endpoint == '/api/v2/foo',
+    'event request mismatch',
+  );
 
   // Verify type identity: Metadata from all three packages is the same type
-  assert(event2.metadata.runtimeType == req2.metadata.runtimeType,
-      'Metadata type mismatch across packages');
+  assert(
+    event2.metadata.runtimeType == req2.metadata.runtimeType,
+    'Metadata type mismatch across packages',
+  );
 
   print('Deep import test passed!');
 }
