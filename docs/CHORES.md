@@ -33,22 +33,17 @@ Central reference for all recurring maintenance tasks.
 
 ## rules_dart Version Bump
 
-**Trigger**: New tag on https://github.com/aran/rules_dart.
+**Trigger**: New rules_dart release on the BCR.
 
 **Files**:
 
-- `MODULE.bazel` — `git_override` tag for `rules_dart`
-- `e2e/simple_proto/MODULE.bazel` — `git_override` tag
-- `e2e/grpc_proto/MODULE.bazel` — `git_override` tag
-- `e2e/diamond_proto/MODULE.bazel` — `git_override` tag
-- `e2e/deep_import_proto/MODULE.bazel` — `git_override` tag
-- `e2e/analysis_pkg/MODULE.bazel` — `git_override` tag
+- `MODULE.bazel` and every `e2e/*/MODULE.bazel` — `bazel_dep(name = "rules_dart", version = "...")`
 
 **Procedure**:
 
-1. Update the `tag` in all `git_override` blocks
-2. Check if the new tag supports newer Dart SDK versions (bump if so)
-3. Regenerate lock files
+1. Update the `rules_dart` version in every MODULE.bazel file
+2. Check if the new release supports newer Dart SDK versions (bump if so)
+3. Regenerate lock files (see Lock File Refresh)
 4. Build and test
 
 **Verification**: All workspaces build successfully.
@@ -149,10 +144,16 @@ Central reference for all recurring maintenance tasks.
 
 **Procedure**:
 
-1. Run `dart pub get` in `dart_proto/` and each e2e workspace to refresh
+1. Move `.bazelrc.user` aside if it exists. A local `--override_module`
+   changes the recorded extension usages, so a lockfile written or checked
+   with it on never matches CI.
+2. Run `dart pub get` in `dart_proto/` and each e2e workspace to refresh
    `pubspec.lock` files
-2. Run `bazel mod deps --lockfile_mode=update` in the root workspace
-3. Run `bazel mod deps --lockfile_mode=update` in each e2e workspace
+3. In the root and each e2e workspace, run
+   `bazel mod tidy --lockfile_mode=refresh`, then
+   `bazel build --nobuild --lockfile_mode=update //...`
+4. Check each workspace with `bazel test //... --lockfile_mode=error`, then
+   put `.bazelrc.user` back
 
 **Verification**: All workspaces report success; lock files are committed.
 
