@@ -20,7 +20,7 @@ class EchoRequest extends $pb.GeneratedMessage {
   factory EchoRequest({
     $core.String? message,
   }) {
-    final result = create();
+    final result = EchoRequest._();
     if (message != null) result.message = message;
     return result;
   }
@@ -29,15 +29,15 @@ class EchoRequest extends $pb.GeneratedMessage {
 
   factory EchoRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      EchoRequest()..mergeFromBuffer(data, registry);
   factory EchoRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      EchoRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EchoRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'example'),
-      createEmptyInstance: create)
+      createEmptyInstance: EchoRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'message')
     ..hasRequiredFields = false;
 
@@ -52,12 +52,15 @@ class EchoRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use EchoRequest() / EchoRequest.new instead')
   static EchoRequest create() => EchoRequest._();
+  static $pb.GeneratedMessage $_createMessage() => EchoRequest._();
   @$core.override
-  EchoRequest createEmptyInstance() => create();
+  EchoRequest createEmptyInstance() => EchoRequest._();
   @$core.pragma('dart2js:noInline')
-  static EchoRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<EchoRequest>(create);
+  static EchoRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<EchoRequest>(
+          EchoRequest.$_createMessage);
   static EchoRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -74,7 +77,7 @@ class EchoResponse extends $pb.GeneratedMessage {
   factory EchoResponse({
     $core.String? message,
   }) {
-    final result = create();
+    final result = EchoResponse._();
     if (message != null) result.message = message;
     return result;
   }
@@ -83,15 +86,15 @@ class EchoResponse extends $pb.GeneratedMessage {
 
   factory EchoResponse.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      EchoResponse()..mergeFromBuffer(data, registry);
   factory EchoResponse.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      EchoResponse()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'EchoResponse',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'example'),
-      createEmptyInstance: create)
+      createEmptyInstance: EchoResponse.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'message')
     ..hasRequiredFields = false;
 
@@ -106,12 +109,15 @@ class EchoResponse extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use EchoResponse() / EchoResponse.new instead')
   static EchoResponse create() => EchoResponse._();
+  static $pb.GeneratedMessage $_createMessage() => EchoResponse._();
   @$core.override
-  EchoResponse createEmptyInstance() => create();
+  EchoResponse createEmptyInstance() => EchoResponse._();
   @$core.pragma('dart2js:noInline')
-  static EchoResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<EchoResponse>(create);
+  static EchoResponse getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<EchoResponse>(
+          EchoResponse.$_createMessage);
   static EchoResponse? _defaultInstance;
 
   @$pb.TagNumber(1)

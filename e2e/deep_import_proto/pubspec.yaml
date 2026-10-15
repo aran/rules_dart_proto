@@ -2,4 +2,4 @@ name: deep_import_proto_e2e
 environment:
   sdk: ^3.13.0
 dependencies:
-  protobuf: ^6.0.0
+  protobuf: ^6.1.0
