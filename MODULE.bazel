@@ -42,6 +42,10 @@ pub = use_extension("@rules_dart//dart/pub:extensions.bzl", "pub")
 pub.from_lock(
     name = "dart_proto_deps",
     lock = "//dart_proto:pubspec.lock",
+    # The protoc plugin's lock must not veto a consumer's newer analyzer or
+    # package_config: rules_dart resolves one version per package across
+    # every module's lock.
+    on_version_conflict = "upgrade",
 )
 use_repo(pub, "dart_proto_deps")
 
