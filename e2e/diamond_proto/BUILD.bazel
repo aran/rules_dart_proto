@@ -1,4 +1,4 @@
-load("@rules_dart//dart:defs.bzl", "dart_binary")
+load("@rules_dart//dart:defs.bzl", "dart_test")
 load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_toolchain")
 
 dart_proto_toolchain(
@@ -12,8 +12,9 @@ toolchain(
     toolchain_type = "@rules_dart_proto//dart_proto:toolchain_type",
 )
 
-dart_binary(
+dart_test(
     name = "diamond_test",
+    size = "small",
     main = "diamond_test.dart",
     deps = [
         "//common:common_dart_proto",

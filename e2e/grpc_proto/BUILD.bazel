@@ -1,4 +1,4 @@
-load("@rules_dart//dart:defs.bzl", "dart_binary")
+load("@rules_dart//dart:defs.bzl", "dart_binary", "dart_test")
 load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_toolchain")
 
 dart_proto_toolchain(
@@ -17,12 +17,29 @@ toolchain(
 dart_binary(
     name = "server",
     main = "server.dart",
-    deps = ["//greeter:greeter_dart_proto"],
+    deps = [
+        "//greeter:greeter_dart_proto",
+        "@pub_deps//:grpc",
+    ],
 )
 
 # Client binary — connects to the gRPC server and calls Greet.
 dart_binary(
     name = "client",
     main = "client.dart",
-    deps = ["//greeter:greeter_dart_proto"],
+    deps = [
+        "//greeter:greeter_dart_proto",
+        "@pub_deps//:grpc",
+    ],
+)
+
+# Starts the server in-process and calls it through the generated client.
+dart_test(
+    name = "greeter_test",
+    size = "small",
+    main = "greeter_test.dart",
+    deps = [
+        "//greeter:greeter_dart_proto",
+        "@pub_deps//:grpc",
+    ],
 )

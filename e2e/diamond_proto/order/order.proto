@@ -7,4 +7,6 @@ import "common/common.proto";
 message Order {
   string id = 1;
   common.Common common = 2;
+  // A 64-bit field, so the generated code imports package:fixnum.
+  int64 quantity = 3;
 }

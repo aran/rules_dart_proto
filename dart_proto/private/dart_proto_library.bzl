@@ -2,7 +2,7 @@
 
 load("@protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
 load("@rules_dart//dart:providers.bzl", "DartInfo")
-load("@rules_dart//dart:utils.bzl", "dart_info")
+load("@rules_dart//dart:utils.bzl", "DART_TOOLCHAIN_TYPES_ATTR", "dart_info")
 
 DartProtoInfo = provider(
     doc = "Proto-specific info for downstream dart_proto_library deps.",
@@ -12,6 +12,18 @@ DartProtoInfo = provider(
         "transitive_proto_infos": "Depset of structs: (package_name, input_root)",
     },
 )
+
+def _fixnum_of(protobuf_runtime):
+    """The label of the fixnum package the protobuf runtime depends on."""
+    fixnum = [
+        label
+        for label, package in protobuf_runtime[DartInfo].deps.items()
+        if package == "fixnum"
+    ]
+    if len(fixnum) != 1:
+        fail(("The protobuf runtime %s does not depend directly on package:fixnum, " +
+              "which generated code imports.") % protobuf_runtime.label)
+    return fixnum
 
 def _file_path(file):
     return file.path
@@ -186,6 +198,10 @@ def _dart_proto_library_impl(ctx):
             # inherit that package's version either.
             language_version = "",
             deps = runtime_deps + ctx.attr.dart_deps,
+            # Generated code imports fixnum (for 64-bit fields), and it must be
+            # the fixnum the protobuf runtime is built on, so it is found among
+            # that runtime's own dependencies rather than configured.
+            indirect_deps = _fixnum_of(tc.protobuf_runtime),
             srcs = [lib_dir],
         ),
         DartProtoInfo(
@@ -215,6 +231,9 @@ dart_proto_library = rule(
             doc = "If True, also generate .pbgrpc.dart files for gRPC services.",
             default = False,
         ),
+        # The runtimes above come from the toolchain, not an attribute; this
+        # lets rules_dart's kernel module aspect reach them through it.
+        DART_TOOLCHAIN_TYPES_ATTR: attr.label_list(default = ["//dart_proto:toolchain_type"]),
     },
     toolchains = ["//dart_proto:toolchain_type"],
     doc = """\

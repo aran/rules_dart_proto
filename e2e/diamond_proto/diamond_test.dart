@@ -26,5 +26,10 @@ void main() {
   final person2 = Person.fromBuffer(personBytes);
   assert(person2.common.value == 'shared', 'roundtrip failed');
 
+  // 64-bit field: set through proto3 JSON so this file needs no fixnum import.
+  final big = Order()..mergeFromProto3Json({'quantity': '9007199254740993'});
+  final big2 = Order.fromBuffer(big.writeToBuffer());
+  assert(big2.quantity.toString() == '9007199254740993', 'int64 roundtrip');
+
   print('Diamond dependency test passed!');
 }
