@@ -25,9 +25,6 @@ def _fixnum_of(protobuf_runtime):
               "which generated code imports.") % protobuf_runtime.label)
     return fixnum
 
-def _file_path(file):
-    return file.path
-
 def _common_dir_prefix(a, b):
     """Find the longest common directory prefix of two directory paths."""
     if a == b:
@@ -51,7 +48,9 @@ def _import_root(f):
 
     A proto_library with an import prefix symlinks its sources under
     `_virtual_imports/<name>`; any other proto is found under the root of its
-    repository, in the source tree or an output directory.
+    repository, in the source tree or an output directory. Only `f.path` names
+    an output directory, so when Bazel maps output paths
+    (`--experimental_output_paths=strip`) the root comes out mapped with it.
     """
     path = f.path
     i = path.find(_VIRTUAL_IMPORTS)
@@ -62,6 +61,12 @@ def _import_root(f):
         short_path = "external/" + short_path[3:]
     output_dir = path[:-len(short_path) - 1] if path != short_path else ""
     return "/".join([d for d in [output_dir, f.owner.workspace_root] if d]) or "."
+
+def _import_root_flag(f):
+    root = _import_root(f)
+
+    # The exec root goes last, once, after every other root.
+    return None if root == "." else "-I" + root
 
 def _import_path(f):
     """The path protoc names proto `f` by, relative to its import root."""
@@ -147,23 +152,32 @@ def _dart_proto_library_impl(ctx):
 
     args = ctx.actions.args()
 
-    plugin = tc.plugin.executable
-    args.add("--plugin=protoc-gen-dart=%s" % plugin.path)
-    args.add("--dart_out=%s:%s" % (dart_out_opt, lib_dir.path))
+    # Paths under bazel-out go in as `File`s, not strings, so that
+    # `--experimental_output_paths=strip` can drop their configuration segment.
+    args.add(tc.plugin.executable, format = "--plugin=protoc-gen-dart=%s")
 
-    # Import paths from transitive proto path
-    import_paths = {}
-    for path in proto_info.transitive_proto_path.to_list():
-        if path:
-            import_paths[path] = True
-    for path in sorted(import_paths.keys()):
-        args.add("-I" + path)
+    # `Args.add` refuses a directory, so the output tree goes through `add_all`.
+    args.add_all(
+        [lib_dir],
+        expand_directories = False,
+        format_each = "--dart_out=" + dart_out_opt.replace("%", "%%") + ":%s",
+    )
+
+    # The import roots come from the protos themselves rather than
+    # `ProtoInfo.transitive_proto_path`, whose strings would keep naming one
+    # configuration's output directory when Bazel maps output paths.
+    args.add_all(
+        proto_info.transitive_sources,
+        map_each = _import_root_flag,
+        uniquify = True,
+        expand_directories = False,
+    )
 
     # Always include the exec root for well-known protos
     args.add("-I.")
 
     # Only direct sources as positional args (fileToGenerate)
-    args.add_all(direct_srcs, map_each = _file_path)
+    args.add_all(direct_srcs)
 
     ctx.actions.run(
         mnemonic = "DartProtoGen",
@@ -173,6 +187,7 @@ def _dart_proto_library_impl(ctx):
         tools = [tc.plugin],
         outputs = [lib_dir],
         progress_message = "Generating Dart protobuf code for %{label}",
+        execution_requirements = {"supports-path-mapping": "1"},
     )
 
     # Runtime libraries come from the toolchain as targets, so they go into

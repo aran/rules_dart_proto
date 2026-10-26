@@ -1,0 +1,3 @@
+# Every action that supports it runs with its output paths mapped, so the
+# build shows whether paths reach protoc unmapped.
+common --experimental_output_paths=strip
