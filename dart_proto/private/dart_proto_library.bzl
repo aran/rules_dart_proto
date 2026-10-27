@@ -188,6 +188,9 @@ def _dart_proto_library_impl(ctx):
         outputs = [lib_dir],
         progress_message = "Generating Dart protobuf code for %{label}",
         execution_requirements = {"supports-path-mapping": "1"},
+        # protoc and the plugin come from the toolchain, so the action runs on
+        # an exec platform that toolchain resolved for.
+        toolchain = "//dart_proto:toolchain_type",
     )
 
     # Runtime libraries come from the toolchain as targets, so they go into
