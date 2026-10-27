@@ -17,7 +17,7 @@ bazel_dep(name = "rules_proto", version = "7.1.0")
 bazel_dep(name = "protobuf", version = "36.2")
 
 dart = use_extension("@rules_dart//dart:extensions.bzl", "dart")
-dart.toolchain(dart_version = "3.13.5")
+dart.toolchain(dart_version = "3.13.7")
 use_repo(dart, "dart_toolchains")
 register_toolchains("@dart_toolchains//:all")
 
