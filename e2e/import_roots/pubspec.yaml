@@ -1,0 +1,5 @@
+name: import_roots_e2e
+environment:
+  sdk: ^3.13.0
+dependencies:
+  protobuf: ^6.1.0

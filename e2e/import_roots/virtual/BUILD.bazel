@@ -1,0 +1,16 @@
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+# Imported as "greet/greeting.proto": protoc sees it under _virtual_imports.
+proto_library(
+    name = "greeting_proto",
+    srcs = ["protos/greet/greeting.proto"],
+    strip_import_prefix = "protos",
+    visibility = ["//visibility:public"],
+)
+
+dart_proto_library(
+    name = "greeting_dart_proto",
+    visibility = ["//visibility:public"],
+    deps = [":greeting_proto"],
+)

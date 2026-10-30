@@ -1,0 +1,26 @@
+load("@rules_dart//dart:defs.bzl", "dart_test")
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_toolchain")
+
+dart_proto_toolchain(
+    name = "dart_proto_toolchain_impl",
+    protobuf_runtime = "@pub_deps//:protobuf",
+)
+
+toolchain(
+    name = "dart_proto_toolchain",
+    toolchain = ":dart_proto_toolchain_impl",
+    toolchain_type = "@rules_dart_proto//dart_proto:toolchain_type",
+)
+
+# Generated code for protos protoc finds under an import prefix or in an output
+# directory, and for a source proto that imports both.
+dart_test(
+    name = "import_roots_test",
+    size = "small",
+    main = "import_roots_test.dart",
+    deps = [
+        "//consumer:note_dart_proto",
+        "//gen:stamp_dart_proto",
+        "//virtual:greeting_dart_proto",
+    ],
+)

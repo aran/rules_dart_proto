@@ -44,15 +44,36 @@ def _common_dir_prefix(a, b):
             break
     return "/".join(common_parts)
 
+_VIRTUAL_IMPORTS = "/_virtual_imports/"
+
+def _import_root(f):
+    """The directory protoc finds proto `f` under, `.` for the exec root.
+
+    A proto_library with an import prefix symlinks its sources under
+    `_virtual_imports/<name>`; any other proto is found under the root of its
+    repository, in the source tree or an output directory.
+    """
+    path = f.path
+    i = path.find(_VIRTUAL_IMPORTS)
+    if i >= 0:
+        return path[:path.index("/", i + len(_VIRTUAL_IMPORTS))]
+    short_path = f.short_path
+    if short_path.startswith("../"):
+        short_path = "external/" + short_path[3:]
+    output_dir = path[:-len(short_path) - 1] if path != short_path else ""
+    return "/".join([d for d in [output_dir, f.owner.workspace_root] if d]) or "."
+
+def _import_path(f):
+    """The path protoc names proto `f` by, relative to its import root."""
+    root = _import_root(f)
+    return f.path if root == "." else f.path[len(root) + 1:]
+
 def _compute_input_root(direct_srcs):
     """Compute the inputRoot for BazelPackages from direct source paths.
 
-    The inputRoot must be the directory prefix of proto files as they appear
-    to protoc (exec-root-relative paths passed on the command line). This is
+    The inputRoot must be the directory prefix of proto files as protoc names
+    them, by import path, not by where they sit under the exec root. This is
     what protoc_plugin's _findPackage() walks up to match.
-
-    proto_source_root from ProtoInfo is typically "" or "." (the repo root)
-    which _findPackage cannot match, so we derive it from the actual files.
     """
     if not direct_srcs:
         fail("dart_proto_library: proto_library has no direct sources")
@@ -62,7 +83,7 @@ def _compute_input_root(direct_srcs):
     # but we handle the general case by finding the longest common prefix.
     dirs = []
     for src in direct_srcs:
-        path = src.path
+        path = _import_path(src)
         if "/" in path:
             dirs.append(path.rsplit("/", 1)[0])
         else:

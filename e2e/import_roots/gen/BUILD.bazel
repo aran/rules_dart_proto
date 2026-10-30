@@ -1,0 +1,29 @@
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+# A proto written by an action, so protoc reads it from an output directory.
+genrule(
+    name = "stamp_src",
+    outs = ["stamp.proto"],
+    cmd = """cat > $@ <<'EOF'
+syntax = "proto3";
+
+package gen;
+
+message Stamp {
+  int32 seconds = 1;
+}
+EOF""",
+)
+
+proto_library(
+    name = "stamp_proto",
+    srcs = [":stamp_src"],
+    visibility = ["//visibility:public"],
+)
+
+dart_proto_library(
+    name = "stamp_dart_proto",
+    visibility = ["//visibility:public"],
+    deps = [":stamp_proto"],
+)

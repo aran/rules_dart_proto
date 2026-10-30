@@ -1,0 +1,22 @@
+load("@rules_dart_proto//dart_proto:defs.bzl", "dart_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+# A source proto importing both kinds of proto above.
+proto_library(
+    name = "note_proto",
+    srcs = ["note.proto"],
+    deps = [
+        "//gen:stamp_proto",
+        "//virtual:greeting_proto",
+    ],
+)
+
+dart_proto_library(
+    name = "note_dart_proto",
+    dart_deps = [
+        "//gen:stamp_dart_proto",
+        "//virtual:greeting_dart_proto",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [":note_proto"],
+)

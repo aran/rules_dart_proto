@@ -34,7 +34,8 @@ jobs:
           "e2e/grpc_proto",
           "e2e/diamond_proto",
           "e2e/deep_import_proto",
-          "e2e/analysis_pkg"
+          "e2e/analysis_pkg",
+          "e2e/import_roots"
         ]
   pre-commit:
     runs-on: ubuntu-latest

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package consumer;
+
+import "gen/stamp.proto";
+import "greet/greeting.proto";
+
+message Note {
+  greet.Greeting greeting = 1;
+  gen.Stamp stamp = 2;
+}
