@@ -1,3 +1,6 @@
 # Every action that supports it runs with its output paths mapped, so the
-# build shows whether paths reach protoc unmapped.
-common --experimental_output_paths=strip
+# build shows whether paths reach protoc unmapped. Only where Bazel can
+# sandbox: on Windows it refuses to run a path-mapped action unsandboxed.
+common --enable_platform_specific_config
+common:linux --experimental_output_paths=strip
+common:macos --experimental_output_paths=strip
