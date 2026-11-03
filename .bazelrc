@@ -33,6 +33,10 @@ test --output_groups=+dart_analyze
 test --output_groups=+dart_format
 common --@rules_dart//dart:analysis_config=//tools/analysis:analysis_config
 
+# Each action runs on an execution platform chosen for the toolchain it names,
+# as Bazel will do by default.
+common --incompatible_auto_exec_groups
+
 # Load any settings specific to the current user.
 # .bazelrc.user should appear in .gitignore so that settings are not shared with team members
 # This needs to be last statement in this
