@@ -45,7 +45,7 @@ jobs:
         with:
           bazelisk-cache: true
           repository-cache: true
-      - run: bazel run @overhead//lint:prek -- run --all-files --show-diff-on-failure
+      - run: bazel run @overhead//lint:prek -- run --all-files --hook-stage manual --show-diff-on-failure
   # A consumer can query every package of the published module. Dev-only
   # tooling loads repos a consumer never sees, so it lives in directories
   # REPO.bazel keeps out of the module's packages.

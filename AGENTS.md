@@ -51,6 +51,10 @@ a `BREAKING CHANGE:` footer, which git does not treat as a trailer.
 and the trailers. It runs as the `commit-msg` hook, and in CI on every push
 where the repo has CI. To install the hook, `uv tool install prek`, then
 `prek install -f` (without `-f`, prek keeps an existing hook and runs both).
+The hook runs the check from `.bazel_env/bin`. Set that up once in each
+checkout with `bazel run --noincompatible_auto_exec_groups
+@overhead//:bazel_env`; a hook failing with "No such file or directory" means
+it is missing.
 `bazel run @overhead//changelog` prints the unreleased notes so you can see how
 they read.
 

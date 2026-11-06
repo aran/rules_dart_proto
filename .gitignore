@@ -5,3 +5,4 @@ bazel-*
 .ijwb/
 e2e/analysis_pkg/echo_analysis/pubspec.lock
 .DS_Store
+.bazel_env
