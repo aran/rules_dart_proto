@@ -189,21 +189,27 @@ Bumps).
 
 **Files**: `.github/workflows/*.yaml`
 
-**Dependencies** (all `uses:` references):
+**Dependencies** (all `uses:` references outside `./.github/workflows/`):
 
 - `actions/checkout`
-- `amannn/action-semantic-pull-request`
-- `smlx/ccv`
-- `j178/prek-action`
+- `bazel-contrib/setup-bazel`
 - `technote-space/workflow-conclusion-action`
-- `bazel-contrib/.github` (reusable CI + release workflows)
-- `bazel-contrib/publish-to-bcr`
+- `bazel-contrib/.github` (reusable CI workflow)
+- overhead's reusable workflows in `aran/rules_dart` (bumped with the
+  overhead pin, under Dev Tool Version Bumps)
+
+Every reference is pinned to a full commit SHA, with the version in a
+trailing comment: `uses: owner/repo@<40-hex sha> # v1.2.3`. A tag can be
+moved to other code; a SHA cannot.
 
 **Procedure**:
 
 1. For each `uses:` reference, check the repo for newer versions
-2. Update version refs
-3. Review changelogs for breaking changes in reusable workflows
+2. Resolve the new tag to its commit:
+   `git ls-remote --tags https://github.com/<owner>/<repo>`. For an
+   annotated tag, take the `^{}` line, which is the commit
+3. Update the SHA and its version comment together
+4. Review changelogs for breaking changes in reusable workflows
 
 **Verification**: CI workflow runs successfully.
 
