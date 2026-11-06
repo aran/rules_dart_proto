@@ -2,7 +2,7 @@
 
 load("@protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
 load("@rules_dart//dart:providers.bzl", "DartInfo")
-load("@rules_dart//dart:utils.bzl", "DART_TOOLCHAIN_TYPES_ATTR", "dart_info", "web_compiler_reset")
+load("@rules_dart//dart:utils.bzl", "DART_TOOLCHAIN_TYPES_ATTR", "dart_info", "dart_package_info", "web_compiler_reset")
 
 DartProtoInfo = provider(
     doc = "Proto-specific info for downstream dart_proto_library deps.",
@@ -17,8 +17,8 @@ def _fixnum_of(protobuf_runtime):
     """The label of the fixnum package the protobuf runtime depends on."""
     fixnum = [
         label
-        for label, package in protobuf_runtime[DartInfo].deps.items()
-        if package == "fixnum"
+        for label, packages in protobuf_runtime[DartInfo].deps.items()
+        if "fixnum" in packages
     ]
     if len(fixnum) != 1:
         fail(("The protobuf runtime %s does not depend directly on package:fixnum, " +
@@ -227,15 +227,18 @@ def _dart_proto_library_impl(ctx):
         # naming a single `DartInfo` field.
         dart_info(
             label = ctx.label,
-            package_name = package_name,
-            lib_root = lib_root,
-            # Generated protobuf code is a package with no `pubspec.yaml`, so
-            # there is no `environment.sdk` lower bound to derive a language
-            # version from and nothing for a developer to state: `""` is the
-            # answer, not an omission. It travels as its own package, distinct
-            # from the one whose BUILD file names this target, so it does not
-            # inherit that package's version either.
-            language_version = "",
+            packages = [dart_package_info(
+                label = ctx.label,
+                package_name = package_name,
+                lib_root = lib_root,
+                # Generated protobuf code is a package with no `pubspec.yaml`,
+                # so there is no `environment.sdk` lower bound to derive a
+                # language version from and nothing for a developer to state:
+                # `""` is the answer, not an omission. It travels as its own
+                # package, distinct from the one whose BUILD file names this
+                # target, so it does not inherit that package's version either.
+                language_version = "",
+            )],
             deps = runtime_deps + ctx.attr.dart_deps,
             # Generated code imports fixnum (for 64-bit fields), and it must be
             # the fixnum the protobuf runtime is built on, so it is found among
