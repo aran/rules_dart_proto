@@ -5,3 +5,15 @@ repo(
         "//:package_metadata",
     ],
 )
+
+# Not packages of this module, here or in a consumer's copy of it (where
+# `.bazelignore` would not apply): the end-to-end workspaces; tools, a
+# workspace of its own; and the checkout's own state.
+ignore_directories([
+    "bazel-*",
+    ".claude",
+    ".github",
+    "docs",
+    "e2e",
+    "tools",
+])

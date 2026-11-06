@@ -22,10 +22,15 @@ bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "bazel_lib", version = "3.7.2")
 bazel_dep(name = "package_metadata", version = "0.0.13")
 
-bazel_dep(name = "rules_multitool", version = "1.11.1", dev_dependency = True)
-bazel_dep(name = "buildifier_prebuilt", version = "10.1.0", dev_dependency = True)
-
-bazel_dep(name = "bazelrc-preset.bzl", version = "1.9.2")
+# Shared dev tooling: the commit policy, release notes and release workflows,
+# tool pins and lock checks. See AGENTS.md.
+bazel_dep(name = "overhead", version = "0.0.0", dev_dependency = True)
+git_override(
+    module_name = "overhead",
+    commit = "e46da5b40a704d1f8f3aa466cc61d7d0b24f4d6d",
+    remote = "https://github.com/aran/rules_dart.git",
+    strip_prefix = "overhead",
+)
 
 # Dart toolchain (needed to compile protoc-gen-dart plugin)
 dart = use_extension("@rules_dart//dart:extensions.bzl", "dart")
@@ -45,11 +50,3 @@ pub.from_lock(
     on_version_conflict = "upgrade",
 )
 use_repo(pub, "dart_proto_deps")
-
-multitool = use_extension(
-    "@rules_multitool//multitool:extension.bzl",
-    "multitool",
-    dev_dependency = True,
-)
-multitool.hub(lockfile = "//:multitool.lock.json")
-use_repo(multitool, "multitool")

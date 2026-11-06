@@ -27,11 +27,11 @@ common --config=ruleset
 common --lockfile_mode=error
 
 # Run `dart analyze` and the `dart format` check over every Dart target
-# `bazel test` builds, against the options files listed in //tools/analysis:analysis_config.
+# `bazel test` builds, against the options files listed in //analysis:analysis_config.
 test --aspects=@rules_dart//dart:analyze.bzl%dart_analyze
 test --output_groups=+dart_analyze
 test --output_groups=+dart_format
-common --@rules_dart//dart:analysis_config=//tools/analysis:analysis_config
+common --@rules_dart//dart:analysis_config=//analysis:analysis_config
 
 # Each action runs on an execution platform chosen for the toolchain it names,
 # as Bazel will do by default.

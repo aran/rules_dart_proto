@@ -1,0 +1,10 @@
+# Checks every commit pushed to main against the commit policy in AGENTS.md.
+name: Commit messages
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  check:
+    uses: aran/rules_dart/.github/workflows/overhead-commit-messages.yaml@e46da5b40a704d1f8f3aa466cc61d7d0b24f4d6d

@@ -89,6 +89,7 @@ Central reference for all recurring maintenance tasks.
 - `e2e/diamond_proto/.bazelversion`
 - `e2e/deep_import_proto/.bazelversion`
 - `e2e/analysis_pkg/.bazelversion`
+- `tools/.bazelversion`
 - `.github/workflows/ci.yaml` — `bazel_versions`; must match `.bazelversion`,
   because the root lockfile records Bazel's built-in module versions
 - `.bcr/presubmit.yml` — `bazel:` matrix value (if major version changes)
@@ -135,58 +136,27 @@ Central reference for all recurring maintenance tasks.
 
 **Trigger**: After any change to `MODULE.bazel` files or pubspec files.
 
-**Workspaces** (directories containing `MODULE.bazel`):
-
-- `.` (root)
-- `e2e/simple_proto`
-- `e2e/grpc_proto`
-- `e2e/diamond_proto`
-- `e2e/deep_import_proto`
-- `e2e/analysis_pkg`
-
 **Procedure**:
 
-1. Move `.bazelrc.user` aside if it exists. A local `--override_module`
-   changes the recorded extension usages, so a lockfile written or checked
-   with it on never matches CI.
-2. Run `dart pub get` in `dart_proto/` and each e2e workspace to refresh
+1. Run `dart pub get` in `dart_proto/` and each e2e workspace to refresh
    `pubspec.lock` files
-3. In the root and each e2e workspace, run
-   `bazel mod tidy --lockfile_mode=refresh`, then
-   `bazel build --nobuild --lockfile_mode=update //...`
-4. Check each workspace with `bazel test //... --lockfile_mode=error`, then
-   put `.bazelrc.user` back
+2. Run `bazel run @overhead//locks -- --refresh` for every workspace
+   (directories holding a `MODULE.bazel`), or name some:
+   `bazel run @overhead//locks -- --refresh e2e/simple_proto`. It leaves out
+   `.bazelrc.user`, whose overrides would otherwise end up in the lock.
 
-**Verification**: All workspaces report success; lock files are committed.
+**Verification**: `bazel run @overhead//locks` reports every workspace
+current; lock files are committed.
 
 ---
 
-## Multitool Version Bumps
+## Dev Tool Version Bumps
 
-**Trigger**: Periodic (monthly) or when a managed tool releases a needed version.
-
-**Files**:
-
-- `multitool.lock.json` — tool versions, URLs, and SHA-256 hashes
-- `.pre-commit-config.yaml` — matching `rev:` values for yamlfmt and typos
-
-**Managed tools**: `git-cliff`, `prek`, `typos`, `yamlfmt`
-
-**Procedure**:
-
-1. For each tool in `multitool.lock.json`, check GitHub releases for newer versions
-2. Download archives for all platform variants (macOS/Linux, arm64/x86_64)
-3. Compute SHA-256 hashes and update the lockfile entries
-4. Update matching `rev:` in `.pre-commit-config.yaml`
-5. Regenerate Bazel lock files
-6. Run `bazel run @multitool//tools/yamlfmt -- -lint .` and
-   `bazel run @multitool//tools/typos -- .` to verify
-
-**Verification**: Both tools run successfully against the repo.
-
-When bumping prek, update `prek-version` in `.github/workflows/ci.yaml` to
-match, and run `uv tool upgrade prek` so the installed git hooks use the new
-version.
+git-cliff, prek, typos and yamlfmt are pinned in overhead
+(`overhead/multitool.lock.json` in rules_dart), which this repository takes as
+a dev dependency; bump them there. Here, bump the overhead `git_override`
+commit in `MODULE.bazel` and the matching `aran/rules_dart/...@<sha>` refs in
+`.github/workflows/` together, then run `bazel run @overhead//pins:check`.
 
 ---
 
@@ -203,16 +173,13 @@ version.
 - `pre-commit/pre-commit-hooks` — general file checks
 - `keith/pre-commit-buildifier` — buildifier formatting/linting
 - `pre-commit/mirrors-prettier` — prettier formatting
-- `google/yamlfmt` — YAML formatting (keep in sync with `multitool.lock.json`)
-- `crate-ci/typos` — spell checking (keep in sync with `multitool.lock.json`)
 
 **Procedure**: Renovate (`:enablePreCommit` preset) bumps the hook `rev:`
-values in `.pre-commit-config.yaml`. For yamlfmt and typos, ensure versions
-match `multitool.lock.json`. prek itself is bumped by hand: its entry in
-`multitool.lock.json` and `prek-version` in `.github/workflows/ci.yaml` (see
-Multitool Version Bumps).
+values in `.pre-commit-config.yaml`. The commit-message, yamlfmt and typos
+hooks run through overhead at the versions it pins (see Dev Tool Version
+Bumps).
 
-**Verification**: `prek run --all-files` passes.
+**Verification**: `bazel run @overhead//lint:prek -- run --all-files` passes.
 
 ---
 

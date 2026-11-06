@@ -41,14 +41,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: j178/prek-action@v3.0.1
+      - uses: bazel-contrib/setup-bazel@0.19.1
         with:
-          # Keep in step with prek in multitool.lock.json
-          prek-version: 0.5.5
+          bazelisk-cache: true
+          repository-cache: true
+      - run: bazel run @overhead//lint:prek -- run --all-files --show-diff-on-failure
+  # A consumer can query every package of the published module. Dev-only
+  # tooling loads repos a consumer never sees, so it lives in directories
+  # REPO.bazel keeps out of the module's packages.
+  consumer-query:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: bazel-contrib/setup-bazel@0.19.1
+        with:
+          bazelisk-cache: true
+          repository-cache: true
+      - name: Query the whole published module from a consumer
+        working-directory: e2e/simple_proto
+        run: bazel query "@rules_dart_proto//..."
   # For branch protection settings, this job provides a "stable" name that can be used to gate PR merges
   # on "all matrix jobs were successful".
   conclusion:
-    needs: [test, pre-commit]
+    needs: [test, pre-commit, consumer-query]
     runs-on: ubuntu-latest
     if: always()
     steps:

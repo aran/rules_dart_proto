@@ -28,7 +28,7 @@ nothing unless one fails.
 To run every hook without installing anything beyond Bazel:
 
 ```shell
-bazel run @multitool//tools/prek -- -C "$PWD" run --all-files
+bazel run @overhead//lint:prek -- run --all-files
 ```
 
 ## Commit messages
@@ -36,7 +36,7 @@ bazel run @multitool//tools/prek -- -C "$PWD" run --all-files
 Commit messages follow the policy in [AGENTS.md](AGENTS.md): a
 conventional-commit subject and, for user-visible changes, a `Changelog:`
 trailer. The commit-msg hook that `prek install` sets up checks each commit;
-run the check on a range with `bazel run //tools/changelog:check -- --range A..B`.
+run the check on a range with `bazel run @overhead//changelog:check -- --range A..B`.
 
 ## Running tests
 
