@@ -1,0 +1,2 @@
+# Local settings for this machine, not checked in.
+try-import %workspace%/.bazelrc.user

@@ -4,3 +4,6 @@
 common --enable_platform_specific_config
 common:linux --experimental_output_paths=strip
 common:macos --experimental_output_paths=strip
+
+# Local settings for this machine, not checked in.
+try-import %workspace%/.bazelrc.user
