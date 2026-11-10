@@ -13,6 +13,7 @@
 # in the same commit that introduces the incompatible change.
 module(
     name = "rules_dart_proto",
+    bazel_compatibility = [">=9.0.0"],
 )
 
 bazel_dep(name = "rules_dart", version = "0.8.1")
