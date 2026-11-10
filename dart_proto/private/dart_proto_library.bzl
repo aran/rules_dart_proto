@@ -2,7 +2,7 @@
 
 load("@protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
 load("@rules_dart//dart:providers.bzl", "DartInfo")
-load("@rules_dart//dart:utils.bzl", "DART_TOOLCHAIN_TYPES_ATTR", "dart_info", "dart_package_info", "web_compiler_reset")
+load("@rules_dart//dart:utils.bzl", "DART_TOOLCHAIN_TYPES_ATTR", "dart_info", "dart_package_info", "runtime_reset")
 
 DartProtoInfo = provider(
     doc = "Proto-specific info for downstream dart_proto_library deps.",
@@ -255,10 +255,10 @@ def _dart_proto_library_impl(ctx):
 
 dart_proto_library = rule(
     implementation = _dart_proto_library_impl,
-    # protoc's output cannot depend on the web compiler, so every route in,
-    # from either web binary or none, reaches one configured target: protoc
-    # runs once however many binaries share the package.
-    cfg = web_compiler_reset,
+    # protoc's output cannot depend on the runtime a binary compiles for, so
+    # every route in, from a VM, JS or Wasm binary, reaches one configured
+    # target: protoc runs once however many binaries share the package.
+    cfg = runtime_reset,
     attrs = {
         "deps": attr.label_list(
             doc = "Exactly one proto_library target to generate Dart code for.",
