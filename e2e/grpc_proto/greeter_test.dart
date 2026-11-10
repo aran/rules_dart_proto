@@ -17,9 +17,8 @@ Future<void> main() async {
     options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
   );
   try {
-    final response = await GreeterClient(
-      channel,
-    ).greet(GreetRequest()..name = 'World');
+    final response = await GreeterClient(channel)
+        .greet(GreetRequest()..name = 'World');
     if (response.message != 'Hello, World!') {
       throw StateError('unexpected reply: ${response.message}');
     }

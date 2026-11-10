@@ -1,2 +1,9 @@
+# Run `dart analyze` and the `dart format` check over every Dart target
+# `bazel test` builds, as a consumer of these rules would: generated proto
+# code is analyzed through the summaries dart_proto_library provides.
+test --aspects=@rules_dart//dart:analyze.bzl%dart_analyze
+test --output_groups=+dart_analyze
+test --output_groups=+dart_format
+
 # Local settings for this machine, not checked in.
 try-import %workspace%/.bazelrc.user
