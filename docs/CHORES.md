@@ -89,7 +89,7 @@ Central reference for all recurring maintenance tasks.
 - `e2e/diamond_proto/.bazelversion`
 - `e2e/deep_import_proto/.bazelversion`
 - `e2e/analysis_pkg/.bazelversion`
-- `tools/.bazelversion`
+- `e2e/import_roots/.bazelversion`
 - `.github/workflows/ci.yaml` — `bazel_versions`; must match `.bazelversion`,
   because the root lockfile records Bazel's built-in module versions
 - `.bcr/presubmit.yml` — `bazel:` matrix value (if major version changes)

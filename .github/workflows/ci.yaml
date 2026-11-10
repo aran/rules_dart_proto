@@ -46,7 +46,8 @@ jobs:
           "e2e/analysis_pkg",
           "e2e/import_roots"
         ]
-  # Every MODULE.bazel.lock is complete without anyone's .bazelrc.user.
+  # Every MODULE.bazel.lock is complete without anyone's .bazelrc.user, and the
+  # bazelrc preset is the one overhead generates.
   lockfiles:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -59,6 +60,8 @@ jobs:
           repository-cache: true
       - name: MODULE.bazel.lock files
         run: bazel run @overhead//locks
+      - name: bazelrc preset
+        run: bazel run @overhead//preset -- --check
   # Every hook in .pre-commit-config.yaml, with the prek overhead pins, as a
   # commit runs them: one build puts overhead's tools in .bazel_env, then the
   # hooks run them without Bazel.

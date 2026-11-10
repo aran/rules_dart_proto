@@ -7,8 +7,8 @@ repo(
 )
 
 # Not packages of this module, here or in a consumer's copy of it (where
-# `.bazelignore` would not apply): the end-to-end workspaces; tools, a
-# workspace of its own; and the checkout's own state.
+# `.bazelignore` would not apply): the end-to-end workspaces and the
+# checkout's own state.
 ignore_directories([
     "bazel-*",
     ".bazel_env",
@@ -16,5 +16,4 @@ ignore_directories([
     ".github",
     "docs",
     "e2e",
-    "tools",
 ])
