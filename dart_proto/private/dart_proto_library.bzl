@@ -201,8 +201,8 @@ def _dart_proto_library_impl(ctx):
             fail("grpc = True but the dart_proto_toolchain does not provide grpc_runtime")
         runtime_deps.append(tc.grpc_runtime)
 
-    # lib_root: short_path to the package root (parent of lib/).
-    lib_root = lib_dir.short_path.rsplit("/", 1)[0]
+    # package_root: short_path to the package root (parent of lib/).
+    package_root = lib_dir.short_path.rsplit("/", 1)[0]
 
     # DartProtoInfo for downstream dart_proto_library targets.
     # Uses dart_deps (not all_dep_infos) because only proto packages need
@@ -230,7 +230,7 @@ def _dart_proto_library_impl(ctx):
             packages = [dart_package_info(
                 label = ctx.label,
                 package_name = package_name,
-                lib_root = lib_root,
+                package_root = package_root,
                 # Generated protobuf code is a package with no `pubspec.yaml`,
                 # so there is no `environment.sdk` lower bound to derive a
                 # language version from and nothing for a developer to state:

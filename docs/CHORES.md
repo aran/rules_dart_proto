@@ -140,12 +140,12 @@ Central reference for all recurring maintenance tasks.
 
 1. Run `dart pub get` in `dart_proto/` and each e2e workspace to refresh
    `pubspec.lock` files
-2. Run `bazel run @overhead//locks -- --refresh` for every workspace
-   (directories holding a `MODULE.bazel`), or name some:
-   `bazel run @overhead//locks -- --refresh e2e/simple_proto`. It leaves out
+2. Run `bazel run --lockfile_mode=off @overhead//locks:refresh` for every
+   workspace (directories holding a `MODULE.bazel`), or name some:
+   `bazel run --lockfile_mode=off @overhead//locks:refresh -- e2e/simple_proto`. It leaves out
    `.bazelrc.user`, whose overrides would otherwise end up in the lock.
 
-**Verification**: `bazel run @overhead//locks` reports every workspace
+**Verification**: `bazel run @overhead//locks:check` reports every workspace
 current; lock files are committed.
 
 ---
