@@ -4,7 +4,7 @@ Bazel rules for generating Dart code from Protocol Buffer definitions.
 
 Bridges [`rules_dart`](https://github.com/aran/rules_dart), [`rules_proto`](https://github.com/bazelbuild/rules_proto), and the Dart [`protoc_plugin`](https://pub.dev/packages/protoc_plugin) package.
 
-Requires Bazel 9+.
+Requires Bazel 9.0 or newer.
 
 ## Road to 1.0
 

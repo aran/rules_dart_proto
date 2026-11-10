@@ -93,7 +93,10 @@ Central reference for all recurring maintenance tasks.
 - `.github/workflows/ci.yaml` — `bazel_versions`; must match `.bazelversion`,
   because the root lockfile records Bazel's built-in module versions
 - `.bcr/presubmit.yml` — `bazel:` matrix value (if major version changes)
-- `README.md` — "Requires Bazel 9+" (if major version changes)
+- `MODULE.bazel` — `bazel_compatibility`, and `README.md` — "Requires Bazel
+  9.0 or newer": both state the oldest Bazel the module is known to work
+  with, measured by running the e2e workspaces on it; raise them only when
+  the module comes to need a newer one
 
 **Procedure**:
 
