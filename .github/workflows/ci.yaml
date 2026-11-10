@@ -11,12 +11,21 @@ on:
     - cron: "0 9 * * 1"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+env:
+  # Part of every setup-bazel cache key below. A cache restored on an exact key
+  # hit is never saved again, so it freezes at whatever the first run put in
+  # it; bump this number to start the caches afresh. The Commit messages
+  # workflow (commit-messages.yaml) passes its own: bump that one too.
+  CACHE_VERSION: "1"
 concurrency:
   # Cancel previous actions from the same PR or branch except 'main' branch.
   # See https://docs.github.com/en/actions/using-jobs/using-concurrency and https://docs.github.com/en/actions/learn-github-actions/contexts for more info.
   group: concurrency-group::${{ github.workflow }}::${{ github.event.pull_request.number > 0 && format('pr-{0}', github.event.pull_request.number) || github.ref_name }}${{ github.ref_name == 'main' && format('::{0}', github.run_id) || ''}}
   cancel-in-progress: ${{ github.ref_name != 'main' }}
 jobs:
+  # Every job below that runs its own steps has a timeout: 15 minutes for checks
+  # that run one or two commands, 30 for a Bazel build or query of one
+  # workspace. A caller of a reusable workflow (`test`) cannot set one.
   test:
     uses: bazel-contrib/.github/.github/workflows/bazel.yaml@1d798ff015ed0696433e01e2c3ccbb2abefadad7 # v7.7.0
     with:
@@ -37,24 +46,45 @@ jobs:
           "e2e/analysis_pkg",
           "e2e/import_roots"
         ]
-  pre-commit:
+  # Every MODULE.bazel.lock is complete without anyone's .bazelrc.user.
+  lockfiles:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
         with:
+          cache-version: ${{ env.CACHE_VERSION }}
           bazelisk-cache: true
           repository-cache: true
-      - run: bazel run @overhead//lint:prek -- run --all-files --hook-stage manual --show-diff-on-failure
+      - name: MODULE.bazel.lock files
+        run: bazel run @overhead//locks
+  # Every hook in .pre-commit-config.yaml, with the prek overhead pins, as a
+  # commit runs them: one build puts overhead's tools in .bazel_env, then the
+  # hooks run them without Bazel.
+  pre-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
+        with:
+          cache-version: ${{ env.CACHE_VERSION }}
+          bazelisk-cache: true
+          repository-cache: true
+      - run: bazel run --noincompatible_auto_exec_groups @overhead//:bazel_env -- update-symlink
+      - run: bazel run --noincompatible_auto_exec_groups @overhead//lint:prek -- run --all-files --show-diff-on-failure
   # A consumer can query every package of the published module. Dev-only
   # tooling loads repos a consumer never sees, so it lives in directories
   # REPO.bazel keeps out of the module's packages.
   consumer-query:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: bazel-contrib/setup-bazel@104e3eea9447cdaa4b00d0fb46191a3985d26ab3 # 0.19.1
         with:
+          cache-version: ${{ env.CACHE_VERSION }}
           bazelisk-cache: true
           repository-cache: true
       - name: Query the whole published module from a consumer
@@ -63,18 +93,11 @@ jobs:
   # For branch protection settings, this job provides a "stable" name that can be used to gate PR merges
   # on "all matrix jobs were successful".
   conclusion:
-    needs: [test, pre-commit, consumer-query]
+    needs: [test, lockfiles, pre-commit, consumer-query]
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: always()
     steps:
-      - uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 # v3.0.3
-      # Note: possible conclusion values:
-      # https://github.com/technote-space/workflow-conclusion-action/blob/main/src/constant.ts
-      - name: report success
-        if: ${{ env.WORKFLOW_CONCLUSION == 'success' }}
-        working-directory: /tmp
-        run: echo ${{ env.WORKFLOW_CONCLUSION }} && exit 0
-      - name: report failure
-        if: ${{ env.WORKFLOW_CONCLUSION == 'failure' }}
-        working-directory: /tmp
-        run: echo ${{ env.WORKFLOW_CONCLUSION }} && exit 1
+      - name: Fail if any job did not succeed
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
