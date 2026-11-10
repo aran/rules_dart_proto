@@ -2,7 +2,16 @@
 
 load("@protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
 load("@rules_dart//dart:providers.bzl", "DartInfo")
-load("@rules_dart//dart:utils.bzl", "DART_TOOLCHAIN_TYPES_ATTR", "dart_info", "dart_package_info", "runtime_reset")
+load(
+    "@rules_dart//dart:utils.bzl",
+    "COPY_TO_DIRECTORY_TOOLCHAINS",
+    "DART_TOOLCHAIN_TYPES_ATTR",
+    "PORTABLE_EXEC_GROUPS",
+    "SUMMARY_ATTRS",
+    "dart_info",
+    "dart_package_info",
+    "runtime_reset",
+)
 
 DartProtoInfo = provider(
     doc = "Proto-specific info for downstream dart_proto_library deps.",
@@ -226,7 +235,7 @@ def _dart_proto_library_impl(ctx):
         # `dart_info` does that merge, and every other, without this rule
         # naming a single `DartInfo` field.
         dart_info(
-            label = ctx.label,
+            ctx = ctx,
             packages = [dart_package_info(
                 label = ctx.label,
                 package_name = package_name,
@@ -280,8 +289,11 @@ dart_proto_library = rule(
         # The runtimes above come from the toolchain, not an attribute; this
         # lets rules_dart's kernel module aspect reach them through it.
         DART_TOOLCHAIN_TYPES_ATTR: attr.label_list(default = ["//dart_proto:toolchain_type"]),
-    },
-    toolchains = ["//dart_proto:toolchain_type"],
+    } | SUMMARY_ATTRS,
+    # The analyzer summary `dart_info()` declares runs in rules_dart's
+    # portable exec group and copies the generated package into one directory.
+    exec_groups = PORTABLE_EXEC_GROUPS,
+    toolchains = ["//dart_proto:toolchain_type"] + COPY_TO_DIRECTORY_TOOLCHAINS,
     doc = """\
 Generates Dart protobuf code from a single proto_library target.
 
