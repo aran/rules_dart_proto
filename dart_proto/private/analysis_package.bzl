@@ -26,7 +26,7 @@ def dart_proto_analysis_package(name, dart_proto, path, package_name = None, grp
     code visible to the Dart analysis server for autocomplete, go-to-definition,
     and error checking.
 
-    Run `bazel run :<name>` to sync the files. A `<name>_test` target is
+    Run `bazel run :<name>` to sync the files. A `<name>_tests` target is
     automatically created to check staleness in CI.
 
     Each dart_proto_library target should get its own analysis package:

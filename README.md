@@ -192,13 +192,7 @@ analysis server (and your IDE) cannot see it. The `dart_proto_analysis_package`
 macro copies generated files to the source tree and creates a `pubspec.yaml`,
 making them visible to the analysis server.
 
-Add `bazel_lib` to your `MODULE.bazel`:
-
-```starlark
-bazel_dep(name = "bazel_lib", version = "3.7.2")
-```
-
-Then create one analysis package per `dart_proto_library` target:
+Create one analysis package per `dart_proto_library` target:
 
 ```starlark
 load("@rules_dart_proto//dart_proto:analysis.bzl", "dart_proto_analysis_package")
@@ -216,7 +210,7 @@ Sync the files:
 bazel run //:write_echo_analysis_pkg
 ```
 
-Then add the generated package as a path dependency in your `pubspec.yaml`:
+Then point pub at the generated package from your `pubspec.yaml`:
 
 ```yaml
 dependency_overrides:
@@ -225,6 +219,22 @@ dependency_overrides:
 ```
 
 Run `dart pub get` and the analysis server will pick up the proto types.
+
+`dart pub get` records `echo_dart_proto` in `pubspec.lock` as a `path`
+package, and `pub.from_lock` fails on a `path` package it is not told how to
+build. Map it to the `dart_proto_library`, which must be
+`//visibility:public`:
+
+```starlark
+pub.from_lock(
+    name = "pub_deps",
+    lock = "//:pubspec.lock",
+    resolve = {"echo_dart_proto": "//echo:echo_dart_proto"},
+)
+```
+
+`@pub_deps//:echo_dart_proto` is then that target, so Gazelle can resolve
+`package:echo_dart_proto` imports without a `# gazelle:resolve` directive.
 
 **CI staleness check:** A `write_echo_analysis_pkg_tests` target is
 auto-generated. Add it to your test suite to catch stale analysis packages.
@@ -253,8 +263,35 @@ dart_proto_analysis_package(
 
 1. `proto_library` defines your `.proto` sources (from `rules_proto`)
 2. `dart_proto_library` runs `protoc` with the `protoc-gen-dart` plugin to generate `.pb.dart`, `.pbenum.dart`, `.pbjson.dart` (and optionally `.pbgrpc.dart`) files
-3. The generated code is returned as `DartInfo`, so it composes seamlessly with `dart_binary`, `dart_library`, and `dart_test`
+3. The generated code is returned as `DartInfo`, so it composes seamlessly with `dart_binary`, `dart_library`, and `dart_test`, along with an analyzer summary that `rules_dart`'s `dart_analyze` reads instead of re-analyzing the generated code
 
 The `protoc-gen-dart` plugin is compiled from source using `rules_dart`, so no system Dart or PATH configuration is needed. The `protobuf` and `grpc` runtime libraries are provided by the consumer via `dart_proto_toolchain` to ensure type identity with the rest of the application.
 
-See `e2e/simple_proto/`, `e2e/grpc_proto/`, `e2e/diamond_proto/`, `e2e/deep_import_proto/`, and `e2e/analysis_pkg/` for complete working examples.
+Complete working examples:
+
+- [`e2e/simple_proto/`](e2e/simple_proto/): interdependent protos and `package_name`
+- [`e2e/grpc_proto/`](e2e/grpc_proto/): gRPC services
+- [`e2e/diamond_proto/`](e2e/diamond_proto/): two protos sharing a dependency
+- [`e2e/deep_import_proto/`](e2e/deep_import_proto/): protos in Bazel packages at different depths
+- [`e2e/import_roots/`](e2e/import_roots/): protos under an import prefix or generated into an output directory
+- [`e2e/analysis_pkg/`](e2e/analysis_pkg/): `dart_proto_analysis_package` with Gazelle
+
+## Migrating from 0.8
+
+This release needs the `rules_dart` release that follows 0.8.1. Most of the
+work is `rules_dart`'s: follow its
+[Migrating from 0.8](https://github.com/aran/rules_dart#migrating-from-08)
+guide, which covers the Dart SDK version (3.13.2 or later) and the
+`pub.from_lock` changes. For `rules_dart_proto` itself:
+
+1. A `dart_proto_analysis_package` named in `pubspec.yaml` lands in
+   `pubspec.lock` as a `path` package, which `pub.from_lock` now refuses until
+   it is mapped:
+   `resolve = {"<package>": "<dart_proto_library>"}`, as in
+   [IDE analysis support](#ide-analysis-support).
+2. `dart_analyze` reads the analyzer summary of each `dart_proto_library`
+   dependency. If that hits an SDK summary bug,
+   `--@rules_dart//dart:analysis_summaries=false` turns summaries off.
+3. Rules that read the `DartInfo` of a `dart_proto_library` find its package in
+   `DartInfo.packages` (one `DartPackageInfo`), not in `DartInfo.package_name`
+   and `lib_root`; see the guide's steps for rule authors.
