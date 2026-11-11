@@ -1,7 +1,7 @@
 """Implementation of the dart_proto_library rule."""
 
 load("@protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
-load("@rules_dart//dart:providers.bzl", "DartInfo")
+load("@rules_dart//dart:providers.bzl", "DartInfo", "DartPackageInfo")
 load(
     "@rules_dart//dart:utils.bzl",
     "COPY_TO_DIRECTORY_TOOLCHAINS",
@@ -9,7 +9,6 @@ load(
     "PORTABLE_EXEC_GROUPS",
     "SUMMARY_ATTRS",
     "dart_info",
-    "dart_package_info",
     "runtime_reset",
 )
 
@@ -236,7 +235,7 @@ def _dart_proto_library_impl(ctx):
         # naming a single `DartInfo` field.
         dart_info(
             ctx = ctx,
-            packages = [dart_package_info(
+            packages = [DartPackageInfo(
                 label = ctx.label,
                 package_name = package_name,
                 package_root = package_root,
