@@ -21,7 +21,7 @@ bazel_dep(name = "rules_proto", version = "7.1.0")
 bazel_dep(name = "protobuf", version = "36.2")
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "bazel_lib", version = "3.7.2")
-bazel_dep(name = "package_metadata", version = "0.0.13")
+bazel_dep(name = "package_metadata", version = "0.0.15")
 
 # Shared dev tooling: the commit policy, release notes and release workflows,
 # tool pins and lock checks. See AGENTS.md.

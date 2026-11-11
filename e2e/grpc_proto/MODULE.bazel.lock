@@ -105,7 +105,8 @@
     "https://bcr.bazel.build/modules/libpfm/4.11.0/MODULE.bazel": "45061ff025b301940f1e30d2c16bea596c25b176c8b6b3087e92615adbd52902",
     "https://bcr.bazel.build/modules/nlohmann_json/3.6.1/MODULE.bazel": "6f7b417dcc794d9add9e556673ad25cb3ba835224290f4f848f8e2db1e1fca74",
     "https://bcr.bazel.build/modules/package_metadata/0.0.13/MODULE.bazel": "a9cc7e81640c1e7eaca5a465cdf4b63c88d416ca998fcded3680181b1602eee2",
-    "https://bcr.bazel.build/modules/package_metadata/0.0.13/source.json": "f488e4534468eac223f6417dfdf8d3b7299166d36536408d37c2493ca1e8539d",
+    "https://bcr.bazel.build/modules/package_metadata/0.0.15/MODULE.bazel": "d9c06292392870150584c2f4f84fad636b7012ac7255b2801b424826bad48749",
+    "https://bcr.bazel.build/modules/package_metadata/0.0.15/source.json": "5a9945ed1fa35e1887d6b4c3921758bfd9fa4d78b4be0b9549cab9d6db2d8ea1",
     "https://bcr.bazel.build/modules/package_metadata/0.0.3/MODULE.bazel": "77890552ecea9e284b5424c9de827a58099348763a4359e975c359a83d4faa83",
     "https://bcr.bazel.build/modules/package_metadata/0.0.5/MODULE.bazel": "ef4f9439e3270fdd6b9fd4dbc3d2f29d13888e44c529a1b243f7a31dfbc2e8e4",
     "https://bcr.bazel.build/modules/package_metadata/0.0.6/MODULE.bazel": "341dab6f417197494517d54c8e557c0baee1de7aec83543a4fbefe57900acb7e",
@@ -371,12 +372,12 @@
     "@@rules_dart+//dart/pub:extensions.bzl%pub": {
       "general": {
         "bzlTransitiveDigest": "wqmjv7VQaQrVIC4jdnwxWvOLvrSBZumOdnz7vF08fIc=",
-        "usagesDigest": "qkq/iMGnUOX5IcMaaDngBWQJMZlhxzvjhWuNGk9smvg=",
+        "usagesDigest": "aop5scjUNTeaifb/L0UmosvDQtk4Mf7C7WhTkvgTBP0=",
         "recordedInputs": [
           "REPO_MAPPING:rules_dart+,yaml.bzl yaml.bzl+",
-          "FILE:@@//pubspec.lock 04e230406077b39f14a4ee6c48b6d988489fedfe192f1b3ebbe92f8c0851d059",
+          "FILE:@@//pubspec.lock d1eb414e3b03a34a96bb8dd3d4a132582dd1d8fb49e97482fc697aabca80ce59",
           "FILE:@@rules_dart+//dart/ext/pubspec.lock ae866f3a1d4ebad9a74f9b9efab33c74dfbf904ae0d69dfe94192029d4955188",
-          "FILE:@@rules_dart_proto+//dart_proto/pubspec.lock dbe8be18793bdff944d0931ab6395c525d509fd501593a86b11b738c97e9c12e"
+          "FILE:@@rules_dart_proto+//dart_proto/pubspec.lock 229355f79439d21ff0d9df520d670ef563ac32dbda3c3df4301d8dd1ef512fdc"
         ],
         "generatedRepoSpecs": {
           "dart_pub__async": {
@@ -2663,8 +2664,8 @@
             "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
             "attributes": {
               "package_name": "web",
-              "version": "1.1.1",
-              "sha256": "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a",
+              "version": "1.1.2",
+              "sha256": "e119e82ac4795c7925103b7cf3768191f33941b99e7ccffbd6c645201d9f606b",
               "base_url": "https://pub.dev",
               "hub_name": "dart_pub",
               "lock_packages": [
@@ -2777,8 +2778,8 @@
             "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
             "attributes": {
               "package_name": "_fe_analyzer_shared",
-              "version": "109.0.0",
-              "sha256": "48e48f73a431eb269eec66d243a63a07ed90ef9417a74047a3b98d52338626ad",
+              "version": "111.0.0",
+              "sha256": "1c5591cc6f252d5f440d96ab87c03e43504be552a3fa49d7cb7563f04c51fb0a",
               "base_url": "https://pub.dev",
               "hub_name": "dart_pub",
               "lock_packages": [
@@ -2891,8 +2892,8 @@
             "repoRuleId": "@@rules_dart+//dart/pub:pub_lock_package.bzl%pub_lock_package",
             "attributes": {
               "package_name": "analyzer",
-              "version": "14.5.0",
-              "sha256": "6d377901d198536b648172974d9d4f277910502cad92193466869cac0ff34990",
+              "version": "14.7.0",
+              "sha256": "6c39bd5486a310e56217bed7cb1691377959f31be4227e41750107db7e6dd55c",
               "base_url": "https://pub.dev",
               "hub_name": "dart_pub",
               "lock_packages": [
