@@ -10,7 +10,7 @@ on:
         type: string
 jobs:
   publish:
-    uses: aran/rules_dart/.github/workflows/overhead-publish.yaml@e46da5b40a704d1f8f3aa466cc61d7d0b24f4d6d
+    uses: aran/rules_dart/.github/workflows/overhead-publish.yaml@a910ecfd53a496ec571f125f0ab0aebae6cc425e
     with:
       tag_name: ${{ inputs.tag_name }}
     secrets:
