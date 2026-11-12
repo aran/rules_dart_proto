@@ -33,18 +33,27 @@ Central reference for all recurring maintenance tasks.
 
 ## rules_dart Version Bump
 
-**Trigger**: New rules_dart release on the BCR.
+**Trigger**: New rules_dart release on the BCR. This is the first step of
+every rules_dart_proto release (CONTRIBUTING.md, "Releasing").
 
 **Files**:
 
 - `MODULE.bazel` and every `e2e/*/MODULE.bazel` — `bazel_dep(name = "rules_dart", version = "...")`
+- `MODULE.bazel` — the overhead `git_override` commit
+- `.github/workflows/*.yaml` — every `aran/rules_dart/.github/workflows/overhead-*.yaml@<sha>`
 
 **Procedure**:
 
 1. Update the `rules_dart` version in every MODULE.bazel file
-2. Check if the new release supports newer Dart SDK versions (bump if so)
-3. Regenerate lock files (see Lock File Refresh)
-4. Build and test
+2. Move the overhead pin to the released rules_dart commit, in the
+   `git_override` and in every `overhead-*.yaml@<sha>` reference together;
+   `bazel run @overhead//pins:check` checks they agree
+3. Check if the new release supports newer Dart SDK versions (bump if so)
+4. Regenerate lock files (see Lock File Refresh), and run
+   `bazel run @overhead//preset -- --check` (rerun `bazel run @overhead//preset`
+   if the overhead move changed it)
+5. Build and test, with `.bazelrc.user` files moved aside so the published
+   rules_dart is what gets tested
 
 **Verification**: All workspaces build successfully.
 

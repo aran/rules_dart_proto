@@ -1,20 +1,7 @@
-# Cut a release whenever a new tag is pushed to the repo.
+# Cut a release when a version tag is pushed. Tags are pushed by hand, at the
+# version rules_dart just released (CONTRIBUTING.md, "Releasing").
 name: Release
 on:
-  # Can be triggered from the tag.yaml workflow
-  workflow_call:
-    inputs:
-      tag_name:
-        required: true
-        type: string
-    secrets:
-      publish_token:
-        required: true
-      # What a push of a tag reads from the repository's secrets, in place of
-      # publish_token; declared so the expression below type-checks.
-      BCR_PUBLISH_TOKEN:
-        required: false
-  # Or, developers can manually push a tag from their clone
   push:
     tags:
       - "v*.*.*"
@@ -28,14 +15,14 @@ jobs:
     uses: aran/rules_dart/.github/workflows/overhead-release.yaml@e46da5b40a704d1f8f3aa466cc61d7d0b24f4d6d
     with:
       release_files: rules_dart_proto-*.tar.gz
-      tag_name: ${{ inputs.tag_name || github.ref_name }}
+      tag_name: ${{ github.ref_name }}
   publish:
     needs: release
     uses: aran/rules_dart/.github/workflows/overhead-publish.yaml@e46da5b40a704d1f8f3aa466cc61d7d0b24f4d6d
     with:
-      tag_name: ${{ inputs.tag_name || github.ref_name }}
+      tag_name: ${{ github.ref_name }}
     secrets:
-      publish_token: ${{ secrets.publish_token || secrets.BCR_PUBLISH_TOKEN }}
+      publish_token: ${{ secrets.BCR_PUBLISH_TOKEN }}
     permissions:
       attestations: write
       contents: write

@@ -77,23 +77,23 @@ This means that any usage of `@rules_dart_proto` on your system will point to th
 
 ## Releasing
 
-Releases are automated on a cron trigger.
-The new version is determined automatically from the commit history, assuming the commit messages follow conventions, using
-https://github.com/marketplace/actions/conventional-commits-versioner-action.
-If you do nothing, eventually the newest commits will be released automatically as a patch or minor release.
-This automation is defined in .github/workflows/tag.yaml.
+rules_dart_proto releases only after a rules_dart release, and at exactly
+that version: rules_dart 0.9.0 is followed by rules_dart_proto 0.9.0, never by
+a version number of its own. With no new rules_dart release, commits wait for
+the next one.
 
-Rather than wait for the cron event, you can trigger manually. Navigate to
-https://github.com/aran/rules_dart_proto/actions/workflows/tag.yaml
-and press the "Run workflow" button.
-
-If you need control over the next release version, for example when making a release candidate for a new major,
-then: tag the repo and push the tag, for example
+A release bumps the rules_dart pin and the overhead pin to the released
+rules_dart (see "rules_dart Version Bump" in [docs/CHORES.md](docs/CHORES.md)),
+tests against the published module with any local overrides in
+`.bazelrc.user` set aside, and pushes. Once CI is green on that commit, tag
+it with the same version, signed and annotated:
 
 ```sh
-% git fetch
-% git tag v1.0.0-rc0 origin/main
-% git push origin v1.0.0-rc0
+git fetch
+git tag -s -m "rules_dart_proto v0.9.0" v0.9.0 origin/main
+git push origin v0.9.0
 ```
 
-Then watch the automation run on GitHub actions which creates the release.
+The tag push runs `.github/workflows/release.yaml`, which makes the GitHub
+Release and opens the BCR pull request. It refuses a commit without a green
+CI run.
