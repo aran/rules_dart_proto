@@ -95,5 +95,5 @@ git push origin v0.9.0
 ```
 
 The tag push runs `.github/workflows/release.yaml`, which makes the GitHub
-Release and opens the BCR pull request. It refuses a commit without a green
-CI run.
+Release and opens the BCR pull request. It does not check CI itself, so tag
+only a commit whose CI run is green.

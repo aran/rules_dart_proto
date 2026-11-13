@@ -249,12 +249,11 @@ moved to other code; a SHA cannot.
 
 - `.github/workflows/ci.yaml` — `folders` array in the test job
 
-**Procedure**:
+**Procedure**: Add or remove the workspace's entry in `folders`.
 
-1. Compare `e2e/*/MODULE.bazel` against the `folders` array in `ci.yaml`
-2. Add/remove entries to match
-
-**Verification**: CI runs all e2e workspaces.
+**Verification**: `bazel run @overhead//ci:check` passes. It fails when a
+workspace with a `MODULE.bazel` has no CI job, or when the `conclusion` job
+does not need every job. CI runs it.
 
 ---
 
