@@ -14,9 +14,11 @@ on:
 env:
   # Part of every setup-bazel cache key below. A cache restored on an exact key
   # hit is never saved again, so it freezes at whatever the first run put in
-  # it; bump this number to start the caches afresh. The Commit messages
-  # workflow (commit-messages.yaml) passes its own: bump that one too.
-  CACHE_VERSION: "1"
+  # it; bump this number to start the caches afresh. A reusable workflow's
+  # inputs cannot read `env`, so the `test` job takes it through the YAML
+  # anchor. The Commit messages workflow (commit-messages.yaml) passes its
+  # own: bump that one too.
+  CACHE_VERSION: &cache_version "1"
 concurrency:
   # Cancel previous actions from the same PR or branch except 'main' branch.
   # See https://docs.github.com/en/actions/using-jobs/using-concurrency and https://docs.github.com/en/actions/learn-github-actions/contexts for more info.
@@ -30,6 +32,7 @@ jobs:
     uses: bazel-contrib/.github/.github/workflows/bazel.yaml@1d798ff015ed0696433e01e2c3ccbb2abefadad7 # v7.7.0
     with:
       bazel_versions: '["9.3.0"]'
+      cache_version: *cache_version
       # Exit code 4 means "build succeeded but no test targets found", which is
       # expected for build-only e2e folders.
       # Wrapped in bash -c because the reusable workflow uses the runner's
