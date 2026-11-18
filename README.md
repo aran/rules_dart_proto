@@ -59,8 +59,6 @@ bazel_dep(name = "protobuf", version = "36.2")
 
 dart = use_extension("@rules_dart//dart:extensions.bzl", "dart")
 dart.toolchain(dart_version = "3.14.1")
-use_repo(dart, "dart_toolchains")
-register_toolchains("@dart_toolchains//:all")
 
 # Dart pub dependencies — must include protobuf (and grpc if using grpc = True)
 pub = use_extension("@rules_dart//dart/pub:extensions.bzl", "pub")
