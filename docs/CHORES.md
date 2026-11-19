@@ -152,10 +152,12 @@ every rules_dart_proto release (CONTRIBUTING.md, "Releasing").
 
 1. Run `dart pub get` in `dart_proto/` and each e2e workspace to refresh
    `pubspec.lock` files
-2. Run `bazel run --lockfile_mode=off @overhead//locks:refresh` for every
+2. Move every `.bazelrc.user` aside: the tool reads every rc file Bazel reads,
+   and a local module override would otherwise end up in the lock
+3. Run `bazel run --lockfile_mode=off @overhead//locks:refresh` for every
    workspace (directories holding a `MODULE.bazel`), or name some:
-   `bazel run --lockfile_mode=off @overhead//locks:refresh -- e2e/simple_proto`. It leaves out
-   `.bazelrc.user`, whose overrides would otherwise end up in the lock.
+   `bazel run --lockfile_mode=off @overhead//locks:refresh -- e2e/simple_proto`
+4. Put the `.bazelrc.user` files back
 
 **Verification**: `bazel run @overhead//locks:check` reports every workspace
 current; lock files are committed.
